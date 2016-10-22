@@ -36,9 +36,7 @@ public class SplashScreenActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splashscreen);
 
-        //Se inicia el servicio
-        Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
-        startService(servIntent);
+
 
         try {
             FirebaseInstanceId.getInstance().getToken();

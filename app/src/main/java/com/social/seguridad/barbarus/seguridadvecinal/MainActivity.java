@@ -88,6 +88,12 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        // GPS
+        //Se inicia el servicio de GPS
+        Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
+        startService(servIntent);
+
         buildButton();
 
 
