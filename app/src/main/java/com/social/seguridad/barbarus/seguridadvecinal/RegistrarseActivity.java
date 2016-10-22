@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -15,8 +16,10 @@ import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Checked;
 import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
@@ -37,23 +40,27 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
 
     //inputs
-    @NotEmpty(message = "Complete nombre"  )
-    EditText nombreCompletoTXT;
+    @NotEmpty(message = "Complete nombre completo"  )
+    @Length(min = 7, message = "Debe contener como mínimo 7 caracteres")
+    EditText nameTXT;
 
-    @NotEmpty(message = "Complete DNI" )
+    @Length(min = 7, message = "Debe contener como mínimo 7 caracteres")
+    @NotEmpty(message = "Complete dni" )
     EditText dniTXT;
 
-    @NotEmpty(message = "Complete nro de telefono" )
-    EditText telefonoTXT;
+    @NotEmpty(message = "Complete nro de teléfono" )
+    EditText nroTelefonoTXT;
 
-    @NotEmpty(message = "Complete el correo electronico" )
-    @Email(message = "Ingrese un correo electronico valido")
-    EditText emailTXT;
+    @NotEmpty(message = "Complete el correo electrónico" )
+    @Email(message = "Ingrese un email válido")
+    EditText emailAddressTXT;
 
     @NotEmpty(message = "Complete su contraseña" )
-    @Password(message = "Debe contener letras , numeros , simbolos" , scheme = Password.Scheme.ALPHA_NUMERIC_SYMBOLS)
-    EditText passwordTXT;
+    @Password(message = "Debe contener letras y números" , scheme = Password.Scheme.ALPHA_NUMERIC)
+    EditText password1TXT;
 
+    @Checked(message = "Debe aceptar los términos y condiciones"  )
+    CheckBox terminosCbx;
 
     //validador
     Validator validator;
@@ -91,12 +98,6 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
     private void lanaActivityLogin(View v) {
         boolean isValidate = true;
-        if(!(nombreCompletoTXT.getText().toString().length() > 4)){
-            isValidate = false;
-            nombreCompletoTXT.requestFocus();
-            nombreCompletoTXT.setError("Debe tener al menos 4 letras");
-            return;
-        }
 
         if(!(dniTXT.getText().toString().length() > 6)){
             isValidate = false;
@@ -110,11 +111,12 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
 
     private void buildInput(){
-        nombreCompletoTXT = (EditText)findViewById(R.id.nombreCompletoTXT);
+        nameTXT = (EditText)findViewById(R.id.nameTXT);
         dniTXT = (EditText)findViewById(R.id.dniTXT);
-        telefonoTXT = (EditText)findViewById(R.id.telefonoTXT);
-        emailTXT = (EditText)findViewById(R.id.emailTXT);
-        passwordTXT = (EditText)findViewById(R.id.passwordTXT);
+        nroTelefonoTXT = (EditText)findViewById(R.id.nroTelefonoTXT);
+        emailAddressTXT = (EditText)findViewById(R.id.emailAddressTXT);
+        password1TXT = (EditText)findViewById(R.id.password1TXT);
+        terminosCbx = (CheckBox)findViewById(R.id.terminosCbx);
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -129,11 +131,11 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
     public void registrar(){
         Map<String , String> datos = new HashMap<String, String>();
-        datos.put("nombrecompleto", this.nombreCompletoTXT.getText().toString());
+        datos.put("nombrecompleto", this.nameTXT.getText().toString());
         datos.put("cuit", this.dniTXT.getText().toString());
-        datos.put("telefono", this.telefonoTXT.getText().toString());
-        datos.put("email", this.emailTXT.getText().toString());
-        datos.put("password", this.passwordTXT.getText().toString());
+        datos.put("telefono", this.nroTelefonoTXT.getText().toString());
+        datos.put("email", this.emailAddressTXT.getText().toString());
+        datos.put("password", this.password1TXT.getText().toString());
         datos.put("token", conf.getToken());
 
         if(null != conf.getToken()){
@@ -146,7 +148,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
             );
             wb.execute("");
         }else{
-            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicaciòn" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicación" , Toast.LENGTH_SHORT).show();
         }
     }
 

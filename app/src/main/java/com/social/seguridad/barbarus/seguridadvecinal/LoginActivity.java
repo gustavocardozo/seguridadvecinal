@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
     EditText emailTxt;
 
     @NotEmpty(message = "Complete su contraseña" )
-    @Password(message = "Debe contener letras , numeros , simbolos" , scheme = Password.Scheme.ALPHA_NUMERIC_SYMBOLS)
+    @Password(message = "Debe contener letras , numeros , simbolos" , scheme = Password.Scheme.ALPHA_NUMERIC)
     EditText passwordTxt;
 
     //validador
