@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Alerta Comunidad</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Configuraciòn</string>
+    <string name="ninguna">Ninguna</string>
+    <string name="cerrar_sesion">Cerrar Sesion</string>
+
+    <string name="provinciaLabel">Provincias</string>
+    <string name="localidadLabel">Localidades</string>
+    <string name="barrioLabel">Comunidades</string>
+
+
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fcd255</color>
+    <color name="colorPrimaryDark">#fcd255</color>
+    <color name="colorAccent">#fcd255</color>
+
+
+    <color name="alertaBomberos">#ff8800</color>
+    <color name="alertaPolicia">#0099cc</color>
+    <color name="alertaAmbulancia">#d50000</color>
+</resources>

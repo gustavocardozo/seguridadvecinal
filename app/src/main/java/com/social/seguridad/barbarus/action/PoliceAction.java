@@ -1,0 +1,54 @@
+package com.social.seguridad.barbarus.action;
+
+import android.util.Log;
+import android.widget.Toast;
+
+import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.seguridadvecinal.MainActivity;
+import com.social.seguridad.barbarus.webservice.Asynchtask;
+import com.social.seguridad.barbarus.webservice.WebService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by braian on 24/07/2016.
+ */
+public class PoliceAction implements Asynchtask {
+
+    private static String ALERTA= "Policia";
+    private static String NUMERO_ALERTA = "911";
+
+    private MainActivity mainActivity;
+
+    public PoliceAction(MainActivity mainActivity){
+        this.mainActivity = mainActivity;
+    }
+
+    public void send(String email , String token , String lugar , String latitud , String longitud){
+        Log.d("Seguridad Vecinal", "Boton apretado");
+        Map<String , String> datos = new HashMap<String, String>();
+        datos.put("email", email);
+        datos.put("token", token);
+        datos.put("lugar", lugar);
+        datos.put("longitud", longitud);
+        datos.put("latitud", latitud);
+        datos.put("alerta", ALERTA);
+        datos.put("nroalerta", NUMERO_ALERTA);
+
+
+        WebService wb = new WebService(
+                URL.SERVER_URL + "/sendNotification",
+                datos,
+                this.mainActivity,
+                PoliceAction.this,
+                WebService.TYPE.POST
+        );
+        wb.execute("");
+    }
+
+    @Override
+    public void processFinish(String result) {
+        Toast.makeText(this.mainActivity, result , Toast.LENGTH_SHORT).show();
+    }
+}
