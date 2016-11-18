@@ -72,7 +72,7 @@ public class Configuracion {
         editor.commit();
     }
 
-    public double getLastKnowtLatitud(){
+    public Double getLastKnowtLatitud(){
         String value = getSettings().getString(KEY_LAST_KNOW_LATITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }
@@ -83,7 +83,7 @@ public class Configuracion {
         editor.commit();
     }
 
-    public double getLastKnowLongitud(){
+    public Double getLastKnowLongitud(){
         String value = getSettings().getString(KEY_LAST_KNOW_LONGITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }

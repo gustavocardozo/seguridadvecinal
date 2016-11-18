@@ -20,7 +20,7 @@ import java.util.TimerTask;
 public class SplashScreenActivity extends Activity {
 
     // Set the duration of the splash screen
-    private static final long SPLASH_SCREEN_DELAY = 3500;
+    private static final long SPLASH_SCREEN_DELAY = 6500;
 
     private Configuracion conf;
     private GoogleApiClient client;
@@ -36,12 +36,19 @@ public class SplashScreenActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splashscreen);
 
-
+        //Se inicia el servicio
+        /*Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
+        startService(servIntent);*/
 
         try {
             FirebaseInstanceId.getInstance().getToken();
         }catch (Exception e){
             Toast.makeText(SplashScreenActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        long delay = SPLASH_SCREEN_DELAY;
+        if(null != conf.getToken()){
+            delay = 2000;
         }
 
 
@@ -68,6 +75,6 @@ public class SplashScreenActivity extends Activity {
         };
         // Simulate a long loading process on application startup.
         Timer timer = new Timer();
-        timer.schedule(task, SPLASH_SCREEN_DELAY);
+        timer.schedule(task, delay);
     }
 }

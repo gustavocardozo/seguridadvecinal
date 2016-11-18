@@ -4,6 +4,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.json.JSONParse;
+import com.social.seguridad.barbarus.json.ResultJSON;
 import com.social.seguridad.barbarus.seguridadvecinal.MainActivity;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
@@ -42,13 +44,15 @@ public class FirefighterAction implements Asynchtask {
                 datos,
                 this.mainActivity,
                 FirefighterAction.this,
-                WebService.TYPE.POST
+                WebService.TYPE.POST,
+                true
         );
         wb.execute("");
     }
 
     @Override
     public void processFinish(String result) {
-        Toast.makeText(this.mainActivity, result , Toast.LENGTH_SHORT).show();
+        ResultJSON resultJSON = JSONParse.ParseJSON(result);
+        Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
     }
 }

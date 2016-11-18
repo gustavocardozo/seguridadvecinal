@@ -45,9 +45,7 @@ public class LocalizacionService extends Service implements LocationListener {
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
 
-
-
-            Toast.makeText(LocalizacionService.this, "No se puede obtener su ubicaciòn active permisos de localizacìòn", Toast.LENGTH_LONG).show();
+            Toast.makeText(LocalizacionService.this, "No se puede obtener su ubicación active permisos de localizacìón", Toast.LENGTH_LONG).show();
             return;
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);

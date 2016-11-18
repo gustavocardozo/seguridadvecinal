@@ -62,6 +62,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
     @Checked(message = "Debe aceptar los términos y condiciones"  )
     CheckBox terminosCbx;
 
+
     //validador
     Validator validator;
 
@@ -98,13 +99,6 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
     private void lanaActivityLogin(View v) {
         boolean isValidate = true;
-
-        if(!(dniTXT.getText().toString().length() > 6)){
-            isValidate = false;
-            dniTXT.requestFocus();
-            dniTXT.setError("Debe tener al menos 7 caracteres");
-            return;
-        }
 
         validator.validate();
     }
@@ -144,11 +138,12 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
                     datos,
                     this,
                     this,
-                    WebService.TYPE.POST
+                    WebService.TYPE.POST,
+                    true
             );
             wb.execute("");
         }else{
-            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicación" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicaciòn" , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -158,11 +153,14 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
+                Toast.makeText(this, "Registro completo correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(RegistrarseActivity.this , LoginActivity.class);
                 startActivityForResult(intent,0);
             }else{
-                Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();
             }
+        }else{
+            Toast.makeText(this, "No se ha podido conectar con el servidor" , Toast.LENGTH_LONG).show();
         }
     }
 

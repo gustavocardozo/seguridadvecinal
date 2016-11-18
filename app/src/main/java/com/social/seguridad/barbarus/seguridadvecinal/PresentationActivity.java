@@ -11,15 +11,15 @@ import android.view.View;
 import android.widget.Button;
 
 public class PresentationActivity extends AppCompatActivity {
-    public  static  final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
 
+    public  static  final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation);
 
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -47,6 +47,24 @@ public class PresentationActivity extends AppCompatActivity {
         ingresarButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v){ lanaActivityIngresar(v); }
         });
+
+
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) &&
+                    ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                    ) {
+                Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
+                startService(servIntent);
+            }
+
+        }
     }
 
     public void lanaActivityRegistrar(View v){

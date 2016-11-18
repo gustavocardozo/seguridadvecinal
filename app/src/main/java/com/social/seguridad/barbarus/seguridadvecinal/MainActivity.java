@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,15 +33,24 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
+import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.action.AmbulanceAction;
+import com.social.seguridad.barbarus.action.FirefighterAction;
 import com.social.seguridad.barbarus.action.PoliceAction;
+import com.social.seguridad.barbarus.json.JSONParse;
+import com.social.seguridad.barbarus.json.ResultJSON;
+import com.social.seguridad.barbarus.json.ResultJSONMarker;
+import com.social.seguridad.barbarus.webservice.Asynchtask;
+import com.social.seguridad.barbarus.webservice.WebService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , Asynchtask {
 
 
     private static final int TIME_RUNTIME = 100;
@@ -60,6 +70,8 @@ public class MainActivity extends AppCompatActivity
     private Location mLastLocation;
     public LocationManager mLocationManager;
 
+
+    private List<ResultJSONMarker> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +108,6 @@ public class MainActivity extends AppCompatActivity
 
         buildButton();
 
-
         Toast.makeText(this, conf.getToken() != null ? conf.getToken() : "no token" , Toast.LENGTH_SHORT).show();
     }
 
@@ -114,7 +125,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 runOnUiThread(buildTimerTask());
             }
-        }, 500, 50);
+        }, 500, 100);
     }
 
     /**
@@ -143,6 +154,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Se parar en un metodo generico
      * usar herencia para enviar notificaciones
+     * TODO: serapar en otra clase solo de las acciones de los botones
      */
     private void buildButton() {
         buttonsThreads.put("accion_policeman", null);
@@ -163,12 +175,14 @@ public class MainActivity extends AppCompatActivity
                         if (donutProgress.getProgress() == 100) {
                             //envio notificacion
                             try {
-                                PoliceAction policeAction = new PoliceAction(MainActivity.this);
-                                policeAction.send(conf.getUserEmail(), conf.getToken(),
-                                        conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                                            String.valueOf(conf.getLastKnowLongitud()));
+                                if(esValidoParaEnviarAlerta()){
+                                    PoliceAction policeAction = new PoliceAction(MainActivity.this);
+                                    policeAction.send(conf.getUserEmail(), conf.getToken(),
+                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                            String.valueOf(conf.getLastKnowLongitud()));
+                                }
                             }catch (Exception e){
-                                Toast.makeText(MainActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
                             }
                         }
                         restarProgressBar();
@@ -191,7 +205,16 @@ public class MainActivity extends AppCompatActivity
                         removeTimer("accion_doctor");
                         if (donutProgress.getProgress() == 100) {
                             //envio notificacion
-                            Toast.makeText(MainActivity.this, "Enviando notificacion", Toast.LENGTH_SHORT).show();
+                            try {
+                                if(esValidoParaEnviarAlerta()){
+                                    AmbulanceAction ambulanceAction = new AmbulanceAction(MainActivity.this);
+                                    ambulanceAction.send(conf.getUserEmail(), conf.getToken(),
+                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                            String.valueOf(conf.getLastKnowLongitud()));
+                                }
+                            }catch (Exception e){
+                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         restarProgressBar();
                         break;
@@ -213,7 +236,16 @@ public class MainActivity extends AppCompatActivity
                         removeTimer("accion_firefighter");
                         if (donutProgress.getProgress() == 100) {
                             //envio notificacion
-                            Toast.makeText(MainActivity.this, "Enviando notificacion", Toast.LENGTH_SHORT).show();
+                            try {
+                                if(esValidoParaEnviarAlerta()){
+                                    FirefighterAction firefighterAction = new FirefighterAction(MainActivity.this);
+                                    firefighterAction.send(conf.getUserEmail(), conf.getToken(),
+                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                            String.valueOf(conf.getLastKnowLongitud()));
+                                }
+                            }catch (Exception e){
+                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         restarProgressBar();
                         break;
@@ -223,6 +255,21 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+
+
+    private boolean esValidoParaEnviarAlerta(){
+        if(conf.getUserEmail() != null
+                && conf.getToken() != null
+                && conf.getLastKnowAddresses() != null
+                && conf.getLastKnowLongitud() != null
+                && conf.getLastKnowtLatitud() != null){
+            return true;
+        }
+
+        Toast.makeText(MainActivity.this, "Debe tener una ubicacion configurada para poder enviar" +
+                " alertas a su comunidad", Toast.LENGTH_SHORT).show();
+        return false;
+    }
 
     /**
      * Progreso hasta 100
@@ -322,36 +369,112 @@ public class MainActivity extends AppCompatActivity
 //            mMap.setMyLocationEnabled(true);
         }
 
-        //Location location = mMap.getMyLocation();
+        // Posicion para la camara
+        //TODO:Dberia tomarlo de la configuracion
+        LatLng central = new LatLng(-34.533849 ,  -58.788681);
 
-        // Add a marker in Sydney and move the camera
-        //ambulancia
-        LatLng alert1 = new LatLng(-34.533849 ,  -58.788681);
-        //policia
-        LatLng alert2 = new LatLng(-34.5331491 ,   -58.7905443);
-        //bombero
-        LatLng alert3 = new LatLng(-34.5330151 ,   -58.7918482);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 14));
+        //Llama el servicio para poder cargar los datos
+        //Ahora sera de la comuna del usuaario
+        //TODO: que carge apartir de la posicion del usuario
+        //TODO: que cada x tiempo vaya a buscar apartir de un horario nuevas alertas
+        Map<String , String> datos = new HashMap<String, String>();
+        datos.put("email", conf.getUserEmail());
 
-        mMap.addMarker(new MarkerOptions()
-                .position(alert1)
-                .title("Alerta ambulancia")
-                .snippet("Fecha 12/02/2016 a las 08:00 hs")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.am)));
+        WebService wb = new WebService(
+                URL.SERVER_URL + "/getMarkers",
+                datos,
+                this,
+                this,
+                WebService.TYPE.POST,
+                false
+        );
+        wb.execute("");
+    }
 
-        mMap.addMarker(new MarkerOptions()
-                .position(alert2)
-                .title("Alerta policia")
-                .snippet("Fecha 12/02/2016 a las 21:00 hs")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pol)));
+
+    @Override
+    public void processFinish(String result) {
+        this.markers = JSONParse.ParseJSONMarker(result);
+
+        runOnUiThread(new Runnable() {
+            public void run() {
 
 
-        mMap.addMarker(new MarkerOptions()
-                .position(alert3)
-                .title("Alerta bomberos")
+                try {
+                    for(ResultJSONMarker resultJSONMarker : markers){
+                        mMap.addMarker( buildMarkerOptions(resultJSONMarker.getLatitud(),
+                                    resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
+                                resultJSONMarker.getFecha()));
+                    }
+
+                }catch (Exception e){
+
+                }
+
+
+             /*   //ambulancia
+                LatLng alert1 = new LatLng(-34.533849 ,  -58.788681);
+                //policia
+                LatLng alert2 = new LatLng(-34.5331491 ,   -58.7905443);
+                //bombero
+                LatLng alert3 = new LatLng(-34.5330151 ,   -58.7918482);
+
+                // use data here
+                mMap.addMarker(new MarkerOptions()
+                        .position(alert1)
+                        .title("Alerta ambulancia")
+                        .snippet("Fecha 12/02/2016 a las 08:00 hs")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ambulance)));
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(alert2)
+                        .title("Alerta policia")
+                        .snippet("Fecha 12/02/2016 a las 21:00 hs")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.policecar)));
+
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(alert3)
+                        .title("Alerta bomberos")
+                        .snippet("Fecha 15/02/2016 a las 22:00 hs")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck)));*/
+            }
+        });
+    }
+
+
+
+
+    private MarkerOptions buildMarkerOptions(Double latitud , Double longitud , String tipoAlerta , String fecha ){
+
+        LatLng alert = new LatLng(latitud ,  longitud);
+
+        if("Policia".equals(tipoAlerta)){
+            return new MarkerOptions()
+                    .position(alert)
+                    .title("Alerta policia")
+                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.policecar));
+        }else if("Ambulancia".equals(tipoAlerta)){
+            return new MarkerOptions()
+                    .position(alert)
+                    .title("Alerta ambulancia")
+                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ambulance));
+        }else if("Bombero".equals(tipoAlerta)){
+
+            return new MarkerOptions()
+                    .position(alert)
+                    .title("Alerta bomberos")
+                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck));
+        }
+
+        return new MarkerOptions()
+                .position(alert)
+                .title("Alerta")
                 .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bom)));
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(alert1, 14));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck));
     }
 }

@@ -45,6 +45,9 @@ public class WebService extends AsyncTask<String, Long, String> {
 
 	ProgressDialog progDailog;
 
+
+	private boolean isMessage;
+
 	/**
 	 * Crea una estancia de la clase webService para hacer consultas a ws
 	 * @param urlWebService Url del servicio web
@@ -52,12 +55,13 @@ public class WebService extends AsyncTask<String, Long, String> {
 	 * @param activity Actividad de donde se llama el servicio web, para mostrar el cuadro de "Cargando"
 	 * @param callback CLase a la que se le retornara los datos del servicio web
 	 */
-	public  WebService(String urlWebService,Map<String, String> data, Context activity, Asynchtask callback , TYPE type) {
+	public  WebService(String urlWebService,Map<String, String> data, Context activity, Asynchtask callback , TYPE type , boolean isMessage) {
 		this.url=urlWebService;
 		this.datos=data;
 		this.actividad=activity;
 		this.callback=callback;
 		this.type=type;
+		this.isMessage = isMessage;
 	}
 
 	public WebService() {
@@ -67,12 +71,14 @@ public class WebService extends AsyncTask<String, Long, String> {
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progDailog = new ProgressDialog(this.actividad);
-        progDailog.setMessage("Loading...");
-        progDailog.setIndeterminate(false);
-        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDailog.setCancelable(true);
-        progDailog.show();
+		if(this.isMessage) {
+			progDailog = new ProgressDialog(this.actividad);
+			progDailog.setMessage("Cargando...");
+			progDailog.setIndeterminate(false);
+			progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progDailog.setCancelable(true);
+			progDailog.show();
+		}
     }
 	@Override
 	protected String doInBackground(String... params) {
@@ -102,12 +108,11 @@ public class WebService extends AsyncTask<String, Long, String> {
 	protected void onPostExecute(String response) {
 		super.onPostExecute(response);
         this.xml=response;
-        progDailog.dismiss();
+		if(isMessage){
+			progDailog.dismiss();
+		}
         //Retorno los datos
         callback.processFinish(this.xml);
-      
-        
- 
     }
 	public Map<String, String> getDatos() {
 		return datos;

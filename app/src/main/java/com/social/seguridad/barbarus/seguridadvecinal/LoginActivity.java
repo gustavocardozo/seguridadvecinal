@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
     EditText emailTxt;
 
     @NotEmpty(message = "Complete su contraseña" )
-    @Password(message = "Debe contener letras , numeros , simbolos" , scheme = Password.Scheme.ALPHA_NUMERIC)
+    @Password(message = "Debe contener letras , numeros" , scheme = Password.Scheme.ALPHA_NUMERIC)
     EditText passwordTxt;
 
     //validador
@@ -58,8 +58,6 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
 
         validator = new Validator(this);
         validator.setValidationListener(this);
-
-        Toast.makeText(this, conf.getToken() != null ? conf.getToken() : "no token" , Toast.LENGTH_SHORT).show();
 
         Button ingresarButton = (Button) findViewById(R.id.ingresarButton);
         ingresarButton.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +92,6 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
     public void onValidationSucceeded() {
         conf.setUserEmail(emailTxt.getText().toString());
         login();
-        //Intent intent = new Intent(LoginActivity.this , MainActivity.class);
-        //startActivityForResult(intent,0);
     }
 
     public void login(){
@@ -110,7 +106,8 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
                     datos,
                     this,
                     this,
-                    WebService.TYPE.POST
+                    WebService.TYPE.POST,
+                    true
             );
             wb.execute("");
         }else{
@@ -121,8 +118,6 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
 
     @Override
     public void processFinish(String result) {
-        Toast.makeText(this, result , Toast.LENGTH_SHORT).show();
-
         ResultJSON resultJSON = JSONParse.ParseJSON(result);
 
         if(null != resultJSON){
@@ -130,11 +125,10 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
                 Intent intent = new Intent(LoginActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);
             }else{
-                Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();
             }
         }else{
-            Intent intent = new Intent(LoginActivity.this , MainActivity.class);
-            startActivityForResult(intent,0);
+            Toast.makeText(this, "No se ha podido conectar con el servidor" , Toast.LENGTH_LONG).show();
         }
     }
 }
