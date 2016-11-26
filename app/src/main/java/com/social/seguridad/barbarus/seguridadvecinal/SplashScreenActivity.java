@@ -74,7 +74,7 @@ public class SplashScreenActivity extends Activity {
                             mainIntent = new Intent().setClass(SplashScreenActivity.this, MainActivity.class);
                         }
                     }else {
-                        mainIntent = new Intent().setClass(SplashScreenActivity.this, LoginActivity.class);
+                        mainIntent = new Intent().setClass(SplashScreenActivity.this, PresentationActivity.class);
                     }
                 }
                 startActivity(mainIntent);

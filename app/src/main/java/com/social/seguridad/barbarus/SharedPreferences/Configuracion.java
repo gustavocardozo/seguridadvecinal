@@ -27,11 +27,11 @@ public class Configuracion {
     private final String KEY_ADDRESS    = "ADDRESS";
 
     //configuraciones guardadas por el usuario
-    private final String PROVINCIA    = "";
-    private final String LOCALIDAD   = "";
-    private final String BARRIO    = "";
+    private final String PROVINCIA    = "PROVINCIA";
+    private final String LOCALIDAD   = "LOCALIDAD";
+    private final String BARRIO    = "BARRIO";
 
-    private final boolean EN_SESSION = false;
+    private final String EN_SESSION = "EN_SESSION";
 
     //Si la session ya guardo una ubicacion
     private final String KEY_SESSION_UBICACION = "SESSION_UBICACION";
@@ -211,11 +211,11 @@ public class Configuracion {
 
     public void setEnSession(boolean en_session){
         SharedPreferences.Editor editor = getSettings().edit();
-        editor.putBoolean(BARRIO, en_session);
+        editor.putBoolean(EN_SESSION, en_session);
         editor.commit();
     }
     public boolean getEnSession(){
-        return getSettings().getBoolean(BARRIO ,false);
+        return getSettings().getBoolean(EN_SESSION ,false);
     }
 
     public void cleanUserPreferences(){

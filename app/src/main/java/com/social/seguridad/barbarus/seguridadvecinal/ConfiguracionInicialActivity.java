@@ -171,7 +171,9 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
-
+                conf.setLocalidad(localidad);
+                conf.setProvincia(provincia);
+                conf.setBarrio(barrio);
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ConfiguracionInicialActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);
