@@ -21,7 +21,7 @@ import java.util.TimerTask;
 public class SplashScreenActivity extends Activity {
 
     // Set the duration of the splash screen
-    private static final long SPLASH_SCREEN_DELAY = 6500;
+    private static final long SPLASH_SCREEN_DELAY = 7000;
 
     private Configuracion conf;
     private GoogleApiClient client;
@@ -46,7 +46,7 @@ public class SplashScreenActivity extends Activity {
         try {
             FirebaseInstanceId.getInstance().getToken();
         }catch (Exception e){
-            Toast.makeText(SplashScreenActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
+
         }
 
         long delay = SPLASH_SCREEN_DELAY;

@@ -26,6 +26,7 @@ import com.social.seguridad.barbarus.webservice.WebService;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,22 +44,11 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
     Spinner spinner_localidades;
     Spinner spinner_barrios;
 
-    ArrayAdapter<CharSequence> adapterProvincias;
-    ArrayAdapter<CharSequence> adapterLocalidad;
-    ArrayAdapter<CharSequence> adapterBarrios;
-
-
-    private int provinciaPosicion   = 0;
-    private int localidadPosicion   = 0;
-    private int comunaPosicion      = 0;
-    private ESTADOS_COMBO estados_combo = ESTADOS_COMBO.CARGA_INICIAl;
+    ArrayAdapter<String> adapterProvincias;
+    ArrayAdapter<String> adapterLocalidad;
+    ArrayAdapter<String> adapterBarrios;
 
     private ModelInit init = new ModelInit();
-
-    private enum  ESTADOS_COMBO{
-            CARGA_INICIAl, CARGA_COMPLETADA
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,45 +74,32 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
 
     private void cargarCombos() {
 
-        // Create an ArrayAdapter using the string array and a default spinner
-        // layout
-        //adapterProvincias = ArrayAdapter.createFromResource(
-          //      this, R.array.provincias, android.R.layout.simple_spinner_item);
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        List<String> provinciaList = init.getProvincias();
+        provincia = provinciaList.get(0);
+        adapterProvincias = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, init.getProvincias());
-
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Specify the layout to use when the list of choices appears
-        //adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        //this.spinner_provincias.setAdapter(adapterProvincias);
-        this.spinner_provincias.setAdapter(dataAdapter);
-        // This activity implements the AdapterView.OnItemSelectedListener
+        adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinner_provincias.setAdapter(adapterProvincias);
         this.spinner_provincias.setOnItemSelectedListener(this);
 
 
 
-        adapterLocalidad = ArrayAdapter.createFromResource(
-                this, R.array.localidades, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        List<String> localidadesList = init.getLocalidadesByProvincia(provincia);
+        localidad = localidadesList.get(0);
+        adapterLocalidad = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, localidadesList);
         adapterLocalidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         this.spinner_localidades.setAdapter(adapterLocalidad);
-        // This activity implements the AdapterView.OnItemSelectedListener
         this.spinner_localidades.setOnItemSelectedListener(this);
+        List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
+        barrio = comunaList.get(0);
 
 
-
-
-        adapterBarrios = ArrayAdapter.createFromResource(
-                this, R.array.barrios, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        adapterBarrios = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,comunaList );
         adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+
         this.spinner_barrios.setAdapter(adapterBarrios);
-        // This activity implements the AdapterView.OnItemSelectedListener
         this.spinner_barrios.setOnItemSelectedListener(this);
 
     }
@@ -132,68 +109,26 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.spinProvincias:
-                // Retrieves an array
-                TypedArray arrayLocalidades = getResources().obtainTypedArray(
-                        R.array.provincias_x_localidades);
-                CharSequence[] localidades = arrayLocalidades.getTextArray(position);
-                arrayLocalidades.recycle();
 
-
+                provincia = parent.getItemAtPosition(position).toString();
+                List<String> localidades =init.getLocalidadesByProvincia(provincia);
+                localidad = localidades.get(0);
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item,
-                        init.getLocalidadesByProvincia(parent.getItemAtPosition(position).toString()));
-
+                        android.R.layout.simple_spinner_item, localidades    );
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // Specify the layout to use when the list of choices appears
-                //adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                // Apply the adapter to the spinner
-                //this.spinner_provincias.setAdapter(adapterProvincias);
-                //this.spinner_provincias.setAdapter(dataAdapter);
-                // This activity implements the AdapterView.OnItemSelectedListener
-                //this.spinner_provincias.setOnItemSelectedListener(this);
-
-
-                // Create an ArrayAdapter using the string array and a default
-                // spinner layout
-                /*ArrayAdapter<CharSequence> adapter_localidades = new ArrayAdapter<CharSequence>(
-                        this, android.R.layout.simple_spinner_item,
-                        android.R.id.text1, localidades);
-
-                // Specify the layout to use when the list of choices appears
-                adapter_localidades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)*/
-
-                // Apply the adapter to the spinner
                 this.spinner_localidades.setAdapter(dataAdapter);
-
-
-                this.provincia =  parent.getItemAtPosition(position).toString();
-                this.provinciaPosicion = position;
-
 
 
                 break;
             case R.id.spinLocalidades:
 
-                // Retrieves an array
-                TypedArray arrayBarrios = getResources().obtainTypedArray(
-                        R.array.barrios_x_localidades);
-                CharSequence[] barrios = arrayBarrios.getTextArray(position);
-                arrayBarrios.recycle();
-
-                // Create an ArrayAdapter using the string array and a default
-                // spinner layout
-                ArrayAdapter<CharSequence> adapter_barrios = new ArrayAdapter<CharSequence>(
-                        this, android.R.layout.simple_spinner_item,
-                        android.R.id.text1, barrios);
-
-                // Specify the layout to use when the list of choices appears
-                adapter_barrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // Apply the adapter to the spinner
-                this.spinner_barrios.setAdapter(adapter_barrios);
-
                 this.localidad = parent.getItemAtPosition(position).toString();
+                List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
+                barrio = comunaList.get(0);
+                adapterBarrios = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_spinner_item,comunaList );
+                adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                this.spinner_barrios.setAdapter(adapterBarrios);
 
                 break;
 
@@ -201,17 +136,6 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
                 this.barrio = parent.getItemAtPosition(position).toString();
                 break;
         }
-    }
-
-
-    private void spinProvincia(){
-
-    }
-    private void spinLocalidad(){
-
-    }
-    private void spinBarrio(AdapterView<?> parent,int position){
-        // Retrieves an arr
     }
 
     @Override
@@ -248,9 +172,7 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
-                conf.setBarrio(barrio);
-                conf.setProvincia(provincia);
-                conf.setLocalidad(localidad);
+                conf.setSessionUbicacion("Guardada");
                 Intent intent = new Intent(ConfiguracionInicialActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);
             }else{
@@ -271,15 +193,15 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
             return false;
 
         return true;
-
     }
-
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            conf.deleteUserEmail();
+            conf.deleteSessionUbicacion();
+            onBackPressed();
             return true;
         }
         return false;

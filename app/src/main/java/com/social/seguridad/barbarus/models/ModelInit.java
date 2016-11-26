@@ -47,7 +47,7 @@ public class ModelInit {
     public List<String> getLocalidadesByProvincia(String provincia){
         List<String> l = new ArrayList<>();
         for (Provincia p : provincias  ) {
-            if(p.equals(provincia)){
+            if(p.getName().equals(provincia)){
                 for (Localidad localidad:
                      p.getLocalidades()) {
                     l.add(localidad.getName());
@@ -56,6 +56,24 @@ public class ModelInit {
         }
 
         return  l;
+    }
+
+    public List<String> getComunaByLocalidad(String provincia , String localidad){
+        List<String> c = new ArrayList<>();
+        for (Provincia p : provincias  ) {
+            if(p.getName().equals(provincia)){
+                for (Localidad l: p.getLocalidades()) {
+                    if(l.getName().equals(localidad)){
+                        for (Comuna comuna : l.getComunas()){
+                            c.add(comuna.getName());
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+
     }
 
 
