@@ -26,6 +26,12 @@ public class Configuracion {
     private final String KEY_LONGITUD   = "LONGITUD";
     private final String KEY_ADDRESS    = "ADDRESS";
 
+    //configuraciones guardadas por el usuario
+    private final String PROVINCIA    = "";
+    private final String LOCALIDAD   = "";
+    private final String BARRIO    = "";
+
+    private final boolean EN_SESSION = false;
 
     //Si la session ya guardo una ubicacion
     private final String KEY_SESSION_UBICACION = "SESSION_UBICACION";
@@ -174,34 +180,44 @@ public class Configuracion {
         return getSettings().getString(KEY_LAST_KNOW_ADDRESS , null);
     }
 
-
-
-    public void deleteSessionUbicacion(){
-        this.setSessionUbicacion(null);
-    }
-
-    public void setSessionUbicacion(String session_ubicacion) {
+    public void setProvincia(String provincia){
         SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_SESSION_UBICACION, session_ubicacion);
+        editor.putString(PROVINCIA, provincia);
         editor.commit();
     }
-
-    public String getSessionUbicacion(){
-        return getSettings().getString(KEY_SESSION_UBICACION , null);
+    public String getProvincia(){
+        return getSettings().getString(PROVINCIA ,"");
     }
 
+    public void setLocalidad(String localidad){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(LOCALIDAD, localidad);
+        editor.commit();
+    }
+    public String getLocalidad(){
+        return getSettings().getString(LOCALIDAD ,"");
+    }
 
+    public void setBarrio(String barrio){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(BARRIO, barrio);
+        editor.commit();
+    }
+    public String getBarrio(){
+        return getSettings().getString(BARRIO ,"");
+    }
 
+    public void setEnSession(boolean en_session){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putBoolean(BARRIO, en_session);
+        editor.commit();
+    }
+    public boolean getEnSession(){
+        return getSettings().getBoolean(BARRIO ,false);
+    }
 
     public void cleanUserPreferences(){
-        this.deleteUserEmail();
-        this.deleteSessionUbicacion();
-        this.deleteAddresses();
-        this.deleteLastKnowAddresses();
-        this.deleteLastKnowLatitud();
-        this.deleteLastKnowLongitud();
-        this.deleteLatitud();
-        this.deleteLongitud();
+        this.setEnSession(false);
     }
 
 }

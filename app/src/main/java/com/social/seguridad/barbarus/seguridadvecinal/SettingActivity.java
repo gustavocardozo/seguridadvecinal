@@ -110,7 +110,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         }else if(tabId == R.id.tab_cancelar){
 
-            if(null == conf.getSessionUbicacion()){
+            if(!conf.getEnSession()){
                 Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 0);
             }else {
@@ -277,6 +277,9 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
+                conf.setLocalidad(localidad);
+                conf.setProvincia(provincia);
+                conf.setBarrio(barrio);
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(SettingActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);

@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         //CONF
         conf = new Configuracion(this);
 
-        if(conf.getSessionUbicacion() == null) {
+        if(!conf.getEnSession()) {
             Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
             startActivityForResult(intent, 0);
         }
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            salir();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

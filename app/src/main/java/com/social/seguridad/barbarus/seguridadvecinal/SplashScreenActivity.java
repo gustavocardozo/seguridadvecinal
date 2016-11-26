@@ -66,14 +66,15 @@ public class SplashScreenActivity extends Activity {
                     mainIntent = new Intent().setClass(
                             SplashScreenActivity.this, PresentationActivity.class);
                 }else{
-                    if(conf.getSessionUbicacion() == null){
+                    if(conf.getEnSession()){
                         //si esta logueado pero no tiene ubicacion va direccto a la configuracion
-                        mainIntent = new Intent().setClass(
-                                SplashScreenActivity.this, ConfiguracionInicialActivity.class);
+                        if(conf.getProvincia() == "" && conf.getLocalidad() == "" && conf.getBarrio() == "") {
+                            mainIntent = new Intent().setClass(SplashScreenActivity.this, ConfiguracionInicialActivity.class);
+                        }else{
+                            mainIntent = new Intent().setClass(SplashScreenActivity.this, MainActivity.class);
+                        }
                     }else {
-                        //si esta logueado va directamente al principal
-                        mainIntent = new Intent().setClass(
-                                SplashScreenActivity.this, MainActivity.class);
+                        mainIntent = new Intent().setClass(SplashScreenActivity.this, LoginActivity.class);
                     }
                 }
                 startActivity(mainIntent);

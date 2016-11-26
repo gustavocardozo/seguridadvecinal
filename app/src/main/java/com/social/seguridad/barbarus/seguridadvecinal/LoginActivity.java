@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
+                conf.setEnSession(true);
                 Intent intent = new Intent(LoginActivity.this , ConfiguracionInicialActivity.class);
                 startActivityForResult(intent,0);
             }else{
