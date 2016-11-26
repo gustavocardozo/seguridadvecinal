@@ -36,6 +36,7 @@ public class Configuracion {
     //Si la session ya guardo una ubicacion
     private final String KEY_SESSION_UBICACION = "SESSION_UBICACION";
     //TEST
+    // Otro test
 
 
     private Context context;
