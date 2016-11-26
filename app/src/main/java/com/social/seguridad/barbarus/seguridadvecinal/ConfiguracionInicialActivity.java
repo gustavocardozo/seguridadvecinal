@@ -171,8 +171,8 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
+
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
-                conf.setSessionUbicacion("Guardada");
                 Intent intent = new Intent(ConfiguracionInicialActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);
             }else{
@@ -200,7 +200,6 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             conf.deleteUserEmail();
-            conf.deleteSessionUbicacion();
             onBackPressed();
             return true;
         }

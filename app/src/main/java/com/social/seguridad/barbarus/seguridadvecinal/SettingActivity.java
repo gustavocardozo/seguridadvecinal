@@ -22,6 +22,7 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -109,7 +110,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         }else if(tabId == R.id.tab_cancelar){
 
-            if(null == conf.getSessionUbicacion()){
+            if(!conf.getEnSession()){
                 Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 0);
             }else {

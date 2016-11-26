@@ -6,7 +6,7 @@ import android.location.Address;
 import android.widget.Toast;
 
 /**
- * Created by braian on 17/08/2016.
+ * Created by braian (es un gato) on 17/08/2016.
  */
 public class Configuracion {
     //Nombre de la configuracion
