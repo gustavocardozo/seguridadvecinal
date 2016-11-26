@@ -24,4 +24,9 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
+    <style name="menu_labels_style">
+        <item name="android:background">#e1e4e4</item>
+        <item name="android:textColor">#595958</item>
+        <item name="android:textSize">15dp</item>
+    </style>
 </resources>

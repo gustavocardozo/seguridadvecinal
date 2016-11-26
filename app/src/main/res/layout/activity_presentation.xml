@@ -5,29 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.social.seguridad.barbarus.seguridadvecinal.PresentationActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ingresar"
-        android:id="@+id/ingresarButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#fcd255" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registrarse"
-        android:id="@+id/registrarseButton"
-        android:layout_above="@+id/ingresarButton"
-        android:layout_alignLeft="@+id/ingresarButton"
-        android:layout_alignStart="@+id/ingresarButton"
-        android:layout_alignRight="@+id/ingresarButton"
-        android:layout_alignEnd="@+id/ingresarButton"
-        android:background="@color/abc_search_url_text_normal" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -36,32 +13,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/registrarseButton"
         android:baselineAlignBottom="false"
         android:clickable="false"
         android:nestedScrollingEnabled="false"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/presentacionfondo" />
+        android:background="@drawable/presentacionfondo"
+        android:alpha="0.7"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Buenos Aires"
+        android:text="Argentina Conectada"
         android:id="@+id/textView14"
-        android:layout_marginTop="52dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Conectado"
-        android:id="@+id/textView15"
-        android:layout_below="@+id/textView14"
-        android:layout_centerHorizontal="true" />
+        android:textSize="20sp"
+        android:layout_below="@+id/textView16"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/abc_secondary_text_material_light" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,7 +38,48 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Alerta comunidad"
         android:id="@+id/textView16"
-        android:layout_below="@+id/textView15"
+        android:textSize="30dp"
+        android:textColor="@color/abc_search_url_text_pressed"
+        android:layout_below="@+id/imageView6"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView6"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/ic_location_on_black_48dp"
+        android:minHeight="50dp"
+        android:minWidth="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ingresar"
+        android:id="@+id/ingresarButton"
+        android:layout_alignParentBottom="true"
+        android:background="#fcd255"
+        android:textSize="12sp"
+        android:layout_marginBottom="45dp"
+        android:layout_alignRight="@+id/registrarseButton"
+        android:layout_alignEnd="@+id/registrarseButton"
+        android:layout_alignLeft="@+id/registrarseButton"
+        android:layout_alignStart="@+id/registrarseButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrarse"
+        android:id="@+id/registrarseButton"
+        android:layout_above="@+id/ingresarButton"
+        android:background="@color/abc_search_url_text_normal"
+        android:textSize="12sp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignRight="@+id/textView16"
+        android:layout_alignEnd="@+id/textView16"
+        android:layout_alignLeft="@+id/textView16"
+        android:layout_alignStart="@+id/textView16" />
 
 </RelativeLayout>

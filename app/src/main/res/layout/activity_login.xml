@@ -15,15 +15,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Es muy simple ..."
         android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
+        android:textSize="20dp"
+        android:layout_alignTop="@+id/imageView5"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
+        android:layout_marginTop="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Para entrar a tu comunidad ingresa tu email y contraseña"
+        android:text="Para entrar a tu comunidad ingresa tu correo electrónico y contraseña"
         android:id="@+id/textView2"
         android:layout_below="@+id/textView3"
         android:layout_alignLeft="@+id/emailText"
@@ -39,11 +40,14 @@
         android:inputType="textEmailAddress"
         android:ems="15"
         android:id="@+id/emailText"
-        android:hint="Correo electronico"
-        android:textAlignment="center"
+        android:hint="Correo electrónico"
+        android:textAlignment="viewStart"
         android:layout_marginTop="41dp"
         android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_email_black_24dp"
+        android:textSize="13sp" />
+
 
 
     <EditText
@@ -53,22 +57,45 @@
         android:ems="15"
         android:id="@+id/passwordText"
         android:hint="Contraseña"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
         android:layout_below="@+id/emailText"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+        android:textSize="13sp" />
+
 
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesion"
+        android:text="Iniciar sesión"
         android:id="@+id/ingresarButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="#fcd255" />
+        android:background="#fcd255"
+        android:layout_marginBottom="45dp"
+        android:layout_alignLeft="@+id/passwordText"
+        android:layout_alignStart="@+id/passwordText"
+        android:layout_alignRight="@+id/passwordText"
+        android:layout_alignEnd="@+id/passwordText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="No tienes una cuenta?  Regístrate"
+        android:id="@+id/textView"
+        android:textColor="@color/ksw_md_solid_checked"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView5"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_location_on_black_48dp"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>

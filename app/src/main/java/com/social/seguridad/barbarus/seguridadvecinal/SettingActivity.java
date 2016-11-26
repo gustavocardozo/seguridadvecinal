@@ -3,6 +3,7 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.ValidationError;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
@@ -50,13 +54,11 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
     Spinner spinner_provincias;
     Spinner spinner_localidades;
     Spinner spinner_barrios;
-    TabHost tabHost;
-    String[] provincias = {"Buenos Aires" , "La pampa"};
-    String[] buenosAires_localidades = {"Jose C Paz", "San Miguel"};
-    String[] joseCPaz_barrios = {"El salvador", "Abascal"};
+
     ArrayAdapter<CharSequence> adapterProvincias;
     ArrayAdapter<CharSequence> adapterLocalidad;
     ArrayAdapter<CharSequence> adapterBarrios;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,6 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         this.spinner_barrios = (Spinner) findViewById(R.id.spinBarrios);
         cargarCombos();
 
-
         Button actualizarLocalizacionButton = (Button) findViewById(R.id.actualizarLocalizacionButton);
         actualizarLocalizacionButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v){
@@ -88,25 +89,37 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
             }
         });
 
-        Button guardarConfiguracion = (Button) findViewById(R.id.botonGuardar);
-        guardarConfiguracion.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v){
-                guardarConfiguracion(v);
-            }
-        });
-
-
-        Button cancelar = (Button) findViewById(R.id.botonCancelar);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v){
-                Intent intent = new Intent(SettingActivity.this , MainActivity.class);
-                startActivityForResult(intent,0);
-            }
-        });
-
-
-
+        buildBottombar();
     }
+
+
+    private void buildBottombar(){
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBarSettings);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                accionBottombar(tabId);
+            }
+        });
+    }
+
+
+    private void accionBottombar(@IdRes int tabId){
+        if(tabId == R.id.tab_check){
+            guardarConfiguracion();
+
+        }else if(tabId == R.id.tab_cancelar){
+
+            if(null == conf.getSessionUbicacion()){
+                Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                startActivityForResult(intent, 0);
+            }else {
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                startActivityForResult(intent, 0);
+            }
+        }
+    }
+
 
     private void cargarCombos() {
 
@@ -121,6 +134,8 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         // This activity implements the AdapterView.OnItemSelectedListener
         this.spinner_provincias.setOnItemSelectedListener(this);
 
+
+
         adapterLocalidad = ArrayAdapter.createFromResource(
                 this, R.array.localidades, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
@@ -130,30 +145,17 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         // This activity implements the AdapterView.OnItemSelectedListener
         this.spinner_localidades.setOnItemSelectedListener(this);
 
+
+
+
         adapterBarrios = ArrayAdapter.createFromResource(
-                this, R.array.barrios_joseCPaz, android.R.layout.simple_spinner_item);
+                this, R.array.barrios, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         this.spinner_barrios.setAdapter(adapterBarrios);
         // This activity implements the AdapterView.OnItemSelectedListener
         this.spinner_barrios.setOnItemSelectedListener(this);
-
-
-        /*Spinner spinner_provincias = (Spinner) findViewById(R.id.spinProvincias);
-        ArrayAdapter<CharSequence> adapter_provincias = ArrayAdapter.createFromResource( this, R.array.provincias , android.R.layout.simple_spinner_item);
-        adapter_provincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_provincias.setAdapter(adapter_provincias);
-
-        Spinner spinner_localidades = (Spinner) findViewById(R.id.spinLocalidades);
-        ArrayAdapter<CharSequence> adapter_localidades = ArrayAdapter.createFromResource( this, R.array.localidades , android.R.layout.simple_spinner_item);
-        adapter_localidades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_localidades.setAdapter(adapter_localidades);
-
-        Spinner spinner_barrios = (Spinner) findViewById(R.id.spinBarrios);
-        ArrayAdapter<CharSequence> adapter_barrios = ArrayAdapter.createFromResource( this, R.array.barrios , android.R.layout.simple_spinner_item);
-        adapter_barrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_barrios.setAdapter(adapter_barrios);*/
 
     }
 
@@ -180,7 +182,6 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SettingActivity.this, "Addreses " +     conf.getLastKnowAddresses() , Toast.LENGTH_SHORT).show();
                 localizacion.setText(null != conf.getLastKnowAddresses() ? conf.getLastKnowAddresses() : "Ninguna");
                 actualizarLocalizacionAVLoadingIndicatorView.hide();
                 runActualizacion = false;
@@ -217,7 +218,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 break;
             case R.id.spinLocalidades:
                 // Retrieves an array
-                /**TypedArray arrayBarrios = getResources().obtainTypedArray(
+                TypedArray arrayBarrios = getResources().obtainTypedArray(
                         R.array.barrios_x_localidades);
                 CharSequence[] barrios = arrayBarrios.getTextArray(position);
                 arrayBarrios.recycle();
@@ -232,7 +233,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 adapter_barrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 // Apply the adapter to the spinner
-                this.spinner_barrios.setAdapter(adapter_barrios);*/
+                this.spinner_barrios.setAdapter(adapter_barrios);
 
                 this.localidad = parent.getItemAtPosition(position).toString();
 
@@ -248,7 +249,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     }
 
-    public void guardarConfiguracion(View v){
+    public void guardarConfiguracion(){
         Map<String , String> datos = new HashMap<String, String>();
         datos.put("provincia", provincia);
         datos.put("localidad", localidad);
@@ -279,6 +280,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(SettingActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);
+
             }else{
                 Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();
             }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_configuracion"
+        icon="@drawable/ic_settings_black_24dp"
+        title="Configurar" />
+
+    <tab
+        id="@+id/tab_check"
+        icon="@drawable/ic_check_circle_black_24dp"
+        title="Guardar" />
+    <tab
+        id="@+id/tab_cancelar"
+        icon="@drawable/ic_cancel_black_24dp"
+        title="Cancelar" />
+
+</tabs>

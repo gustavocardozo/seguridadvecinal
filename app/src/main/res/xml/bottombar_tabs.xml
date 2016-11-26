@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_inicio"
+        icon="@drawable/ic_home_black_24dp"
+        title="Inicio" />
+    <tab
+        id="@+id/tab_configuracion"
+        icon="@drawable/ic_settings_black_24dp"
+        title="Configurar" />
+    <tab
+        id="@+id/tab_comunidad"
+        icon="@drawable/ic_group_black_24dp"
+        title="Comunidad" />
+
+    <tab
+        id="@+id/tab_salir"
+        icon="@drawable/ic_exit_to_app_black_24dp"
+        title="Cerrar" />
+</tabs>

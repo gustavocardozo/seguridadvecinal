@@ -18,8 +18,10 @@ import java.util.Map;
  */
 public class AmbulanceAction implements Asynchtask {
 
-    private static String ALERTA= "Ambulancia";
+    public static String ALERTA= "Ambulancia";
     private static String NUMERO_ALERTA = "100";
+
+    public static String ALERTA_TITLE = "Alerta " + ALERTA;
 
     private MainActivity mainActivity;
 
@@ -53,6 +55,8 @@ public class AmbulanceAction implements Asynchtask {
     @Override
     public void processFinish(String result) {
         ResultJSON resultJSON = JSONParse.ParseJSON(result);
-        Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+        if(null != resultJSON && null != resultJSON.getMessage()){
+            Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+        }
     }
 }

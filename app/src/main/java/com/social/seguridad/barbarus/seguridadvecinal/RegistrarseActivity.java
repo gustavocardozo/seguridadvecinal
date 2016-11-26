@@ -3,9 +3,7 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,7 +15,6 @@ import android.widget.Toast;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Checked;
-import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -48,11 +45,11 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
     @NotEmpty(message = "Complete dni" )
     EditText dniTXT;
 
-    @NotEmpty(message = "Complete nro de teléfono" )
+    @NotEmpty(message = "Complete nro. de teléfono" )
     EditText nroTelefonoTXT;
 
     @NotEmpty(message = "Complete el correo electrónico" )
-    @Email(message = "Ingrese un email válido")
+    @Email(message = "Ingrese un correo electrónico válido")
     EditText emailAddressTXT;
 
     @NotEmpty(message = "Complete su contraseña" )
@@ -66,17 +63,6 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
     //validador
     Validator validator;
 
-
-    Spinner spinner;
-    TabHost tabHost;
-    String[] provincias = {"Buenos Aires" , "La pampa"};
-    String[] buenosAires_localidades = {"Jose C Paz", "San Miguel"};
-    String[] joseCPaz_barrios = {"El salvador", "Abascal"};
-    ArrayAdapter<String> adapterProvincias;
-    ArrayAdapter<String> adapterLocalidad;
-    ArrayAdapter<String> adapterBarrios;
-
-
     private Configuracion conf;
 
 
@@ -89,9 +75,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
         //CONF
         conf = new Configuracion(this);
 
-        Toast.makeText(this, conf.getToken() != null ? conf.getToken() : "no token" , Toast.LENGTH_SHORT).show();
-
-        Button registrarmeButton = (Button) findViewById(R.id.registrarmeButton);
+        Button registrarmeButton = (Button) findViewById(R.id.configuracionButton);
         registrarmeButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v){ lanaActivityLogin(v); }
         });
@@ -143,7 +127,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
             );
             wb.execute("");
         }else{
-            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicaciòn" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicación" , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -153,7 +137,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
-                Toast.makeText(this, "Registro completo correctamente" , Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Se registró correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(RegistrarseActivity.this , LoginActivity.class);
                 startActivityForResult(intent,0);
             }else{

@@ -27,6 +27,10 @@ public class Configuracion {
     private final String KEY_ADDRESS    = "ADDRESS";
 
 
+    //Si la session ya guardo una ubicacion
+    private final String KEY_SESSION_UBICACION = "SESSION_UBICACION";
+
+
     private Context context;
 
     public Configuracion(Context context){
@@ -66,6 +70,12 @@ public class Configuracion {
     }
 
 
+    public void deleteLastKnowLatitud(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_LAST_KNOW_LATITUD, null);
+        editor.commit();
+    }
+
     public void setLastKnowLatitud(double value){
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(KEY_LAST_KNOW_LATITUD, String.valueOf(value) );
@@ -76,6 +86,14 @@ public class Configuracion {
         String value = getSettings().getString(KEY_LAST_KNOW_LATITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }
+
+
+    public void deleteLastKnowLongitud(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_LAST_KNOW_LONGITUD, null );
+        editor.commit();
+    }
+
 
     public void setLastKnowLongitud(double value){
         SharedPreferences.Editor editor = getSettings().edit();
@@ -89,17 +107,28 @@ public class Configuracion {
     }
 
 
+    public void deleteLastKnowAddresses(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_LAST_KNOW_ADDRESS, null);
+        editor.commit();
+    }
+
     public void setLastKnowAddresses(String addresses) {
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(KEY_LAST_KNOW_ADDRESS,addresses );
         editor.commit();
-
     }
 
     public String getLastKnowAddresses(){
         return getSettings().getString(KEY_LAST_KNOW_ADDRESS , null);
     }
 
+
+    public void deleteLatitud(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_LATITUD, null );
+        editor.commit();
+    }
 
     public void setLatitud(double value){
         SharedPreferences.Editor editor = getSettings().edit();
@@ -110,6 +139,12 @@ public class Configuracion {
     public double getLatitud(){
         String value = getSettings().getString(KEY_LATITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
+    }
+
+    public void deleteLongitud(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_LONGITUD, null);
+        editor.commit();
     }
 
     public void setLongitud(double value){
@@ -123,6 +158,11 @@ public class Configuracion {
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }
 
+    public void deleteAddresses(){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_ADDRESS, null);
+        editor.commit();
+    }
 
     public void setAddresses(String addresses) {
         SharedPreferences.Editor editor = getSettings().edit();
@@ -133,5 +173,36 @@ public class Configuracion {
     public String getAddresses(){
         return getSettings().getString(KEY_LAST_KNOW_ADDRESS , null);
     }
+
+
+
+    public void deleteSessionUbicacion(){
+        this.setSessionUbicacion(null);
+    }
+
+    public void setSessionUbicacion(String session_ubicacion) {
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_SESSION_UBICACION, session_ubicacion);
+        editor.commit();
+    }
+
+    public String getSessionUbicacion(){
+        return getSettings().getString(KEY_SESSION_UBICACION , null);
+    }
+
+
+
+
+    public void cleanUserPreferences(){
+        this.deleteUserEmail();
+        this.deleteSessionUbicacion();
+        this.deleteAddresses();
+        this.deleteLastKnowAddresses();
+        this.deleteLastKnowLatitud();
+        this.deleteLastKnowLongitud();
+        this.deleteLatitud();
+        this.deleteLongitud();
+    }
+
 }
 

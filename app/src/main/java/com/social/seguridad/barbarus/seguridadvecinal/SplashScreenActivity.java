@@ -1,6 +1,7 @@
 package com.social.seguridad.barbarus.seguridadvecinal;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         //CONF
         conf = new Configuracion(this);
+
+
         // Set portrait orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Hide title bar
@@ -63,9 +66,15 @@ public class SplashScreenActivity extends Activity {
                     mainIntent = new Intent().setClass(
                             SplashScreenActivity.this, PresentationActivity.class);
                 }else{
-                    //si esta logueado va directamente al principal
-                    mainIntent = new Intent().setClass(
-                            SplashScreenActivity.this, MainActivity.class);
+                    if(conf.getSessionUbicacion() == null){
+                        //si esta logueado pero no tiene ubicacion va direccto a la configuracion
+                        mainIntent = new Intent().setClass(
+                                SplashScreenActivity.this, ConfiguracionInicialActivity.class);
+                    }else {
+                        //si esta logueado va directamente al principal
+                        mainIntent = new Intent().setClass(
+                                SplashScreenActivity.this, MainActivity.class);
+                    }
                 }
                 startActivity(mainIntent);
                 // Close the activity so the user won't able to go back this

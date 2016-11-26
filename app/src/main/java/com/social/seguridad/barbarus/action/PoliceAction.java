@@ -18,14 +18,16 @@ import java.util.Map;
  */
 public class PoliceAction implements Asynchtask {
 
-    private static String ALERTA= "Policia";
-    private static String NUMERO_ALERTA = "911";
+        public static String ALERTA= "Policia";
+        private static String NUMERO_ALERTA = "911";
 
-    private MainActivity mainActivity;
+        public static String ALERTA_TITLE = "Alerta " + ALERTA;
 
-    public PoliceAction(MainActivity mainActivity){
-        this.mainActivity = mainActivity;
-    }
+        private MainActivity mainActivity;
+
+        public PoliceAction(MainActivity mainActivity){
+            this.mainActivity = mainActivity;
+        }
 
     public void send(String email , String token , String lugar , String latitud , String longitud){
         Log.d("Seguridad Vecinal", "Boton apretado");
@@ -53,6 +55,8 @@ public class PoliceAction implements Asynchtask {
     @Override
     public void processFinish(String result) {
         ResultJSON resultJSON = JSONParse.ParseJSON(result);
-        Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+        if(null != resultJSON && null != resultJSON.getMessage()){
+            Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+        }
     }
 }

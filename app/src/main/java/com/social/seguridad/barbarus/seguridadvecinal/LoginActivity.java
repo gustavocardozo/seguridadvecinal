@@ -33,12 +33,12 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
 
 
     //inputs
-    @NotEmpty(message = "Complete el correo electronico" )
-    @Email(message = "Ingrese un correo electronico valido")
+    @NotEmpty(message = "Complete el correo electrónico" )
+    @Email(message = "Ingrese un correo electrónico valido")
     EditText emailTxt;
 
     @NotEmpty(message = "Complete su contraseña" )
-    @Password(message = "Debe contener letras , numeros" , scheme = Password.Scheme.ALPHA_NUMERIC)
+    @Password(message = "Debe contener letras, números" , scheme = Password.Scheme.ALPHA_NUMERIC)
     EditText passwordTxt;
 
     //validador
@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
             );
             wb.execute("");
         }else{
-            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicaciòn" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se obtuvo identificador, por favor reinicie la aplicación" , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements Validator.Valida
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
-                Intent intent = new Intent(LoginActivity.this , MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this , ConfiguracionInicialActivity.class);
                 startActivityForResult(intent,0);
             }else{
                 Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();

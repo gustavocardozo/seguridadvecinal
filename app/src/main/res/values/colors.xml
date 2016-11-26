@@ -5,7 +5,14 @@
     <color name="colorAccent">#fcd255</color>
 
 
+    <color name="textColor">#ffff</color>
     <color name="alertaBomberos">#ff8800</color>
     <color name="alertaPolicia">#0099cc</color>
     <color name="alertaAmbulancia">#d50000</color>
+    <color name="alertaRobo">#4d4242</color>
+    <color name="alertaViolenciaGenero">#f97db5</color>
+
+<!--#47b966-->
+
+    <color name="backgroundAlert">#d3e4e4</color>
 </resources>

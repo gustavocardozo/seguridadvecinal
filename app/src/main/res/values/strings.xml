@@ -4,7 +4,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Configuración</string>
     <string name="ninguna">Ninguna</string>
-    <string name="cerrar_sesion">Cerrar Sesion</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
 
     <string name="provinciaLabel">Provincias</string>
     <string name="localidadLabel">Localidades</string>
@@ -13,43 +13,41 @@
 
     <string-array name="localidades">
     </string-array>
-    <string-array name="provincias_x_localidades">
-        <item>@array/localidades_buenosAires</item>
-        <item>@array/localidades_santaFe</item>
+    <string-array name="barrios">
     </string-array>
+
     <string-array name="provincias">
         <item>Buenos Aires</item>
         <item>Santa Fe</item>
     </string-array>
+    <string-array name="provincias_x_localidades">
+        <item>@array/localidades_buenosAires</item>
+        <item>@array/localidades_santaFe</item>
+    </string-array>
+
     <string-array name="localidades_buenosAires">
         <item>José C. Paz</item>
-        <item>San Miguel</item>
-        <item>Tortuguitas</item>
-        <item>Pilar</item>
-        <item>Del viso</item>
-        <item>Escobar</item>
-        <item>Malvinas Argentinas</item>
-        <item>Ricardo Rojas</item>
-        <item>Pacheco</item>
-        <item>San isidro</item>
-        <item>Boulogne</item>
+        <item>San miguel</item>
     </string-array>
+
     <string-array name="localidades_santaFe">
         <item>Santa Fe</item>
     </string-array>
 
     <string-array name="barrios_x_localidades">
         <item>@array/barrios_joseCPaz</item>
+        <item>@array/barrios_santafe</item>
         <item>@array/barrios_sanMiguel</item>
     </string-array>
+
     <string-array name="barrios_joseCPaz">
-        <item>La paz</item>
-        <item>Alberdi</item>
         <item>El salvador</item>
-        <item>Abascal</item>
+    </string-array>
+    <string-array name="barrios_santafe">
+        <item>San Miguel</item>
     </string-array>
     <string-array name="barrios_sanMiguel">
-        <item>San Miguel</item>
+        <item>San jose</item>
     </string-array>
 
 

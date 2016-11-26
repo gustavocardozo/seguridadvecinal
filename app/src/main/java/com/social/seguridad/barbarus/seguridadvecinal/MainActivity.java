@@ -3,13 +3,17 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -32,17 +37,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
+import com.social.seguridad.barbarus.Estados.EstadosMarkers;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.action.AmbulanceAction;
+import com.social.seguridad.barbarus.action.CriminalAction;
 import com.social.seguridad.barbarus.action.FirefighterAction;
 import com.social.seguridad.barbarus.action.PoliceAction;
+import com.social.seguridad.barbarus.action.ViolenciaGeneroAction;
+import com.social.seguridad.barbarus.googleMapUtil.GoogleMapUtil;
 import com.social.seguridad.barbarus.json.JSONParse;
-import com.social.seguridad.barbarus.json.ResultJSON;
 import com.social.seguridad.barbarus.json.ResultJSONMarker;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,15 +65,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , Asynchtask {
-
+        implements OnMapReadyCallback , Asynchtask {
 
     private static final int TIME_RUNTIME = 100;
 
     private GoogleMap mMap;
 
     //PARA GUARDAR CONFIGURACIONES
-    //EJEMPLO EMAIL DEL LOGUEADO
     private Configuracion conf;
 
     private FloatingActionsMenu mFAB;
@@ -70,8 +83,10 @@ public class MainActivity extends AppCompatActivity
     private Location mLastLocation;
     public LocationManager mLocationManager;
 
-
     private List<ResultJSONMarker> markers;
+
+
+    private EstadosMarkers.ESTADO estadoMarkers = EstadosMarkers.ESTADO.LOCAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,35 +95,96 @@ public class MainActivity extends AppCompatActivity
         //CONF
         conf = new Configuracion(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if(conf.getSessionUbicacion() == null) {
+            Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
+            startActivityForResult(intent, 0);
+        }
 
+        //Floating y donut progress
         mFAB = (FloatingActionsMenu) findViewById(R.id.fab);
         donutProgress = (DonutProgress) findViewById(R.id.donut_progress);
         donutProgress.setVisibility(View.INVISIBLE);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Generacion de acciones de los botones
+        buildButton();
 
         // GPS
         //Se inicia el servicio de GPS
         Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
         startService(servIntent);
 
-        buildButton();
+        buildBottombar();
+    }
 
-        Toast.makeText(this, conf.getToken() != null ? conf.getToken() : "no token" , Toast.LENGTH_SHORT).show();
+
+
+    private void buildBottombar(){
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            int i = 0;
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (this.i != 0) {
+                    accionBottombar(tabId);
+                }
+                this.i++;
+            }
+        });
+
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            int i = 0;
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                if (this.i != 0) {
+                    accionBottombar(tabId);
+                }
+                this.i++;
+            }
+        });
+    }
+
+
+    private void accionBottombar(@IdRes int tabId){
+        if (tabId == R.id.tab_inicio) {
+        }else if(tabId == R.id.tab_configuracion){
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivityForResult(intent, 0);
+        }else if(tabId == R.id.tab_comunidad){
+        }else if(tabId == R.id.tab_salir){
+            salir();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            salir();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //Sale de la aplicacion
+    private void salir(){
+        new AlertDialog.Builder(this)
+                .setMessage("¿Seguro que desea cerrar su sesión?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        conf.cleanUserPreferences();
+                        Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
+                        startActivityForResult(intent, 0);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     /**
@@ -125,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 runOnUiThread(buildTimerTask());
             }
-        }, 500, 100);
+        }, 500, 30);
     }
 
     /**
@@ -160,35 +236,22 @@ public class MainActivity extends AppCompatActivity
         buttonsThreads.put("accion_policeman", null);
         buttonsThreads.put("accion_doctor", null);
         buttonsThreads.put("accion_firefighter", null);
+        buttonsThreads.put("accion_criminal" , null);
+        buttonsThreads.put("accion_venus" , null);
+
+        //Violencia de genero
+        findViewById(R.id.accion_venus).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return  alertVenus(v,event);
+            }
+        });
 
         //Policia
         findViewById(R.id.accion_policeman).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int eventaction = event.getAction();
-                switch (eventaction) {
-                    case MotionEvent.ACTION_DOWN:
-                        buildTimer("accion_policeman");
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        removeTimer("accion_policeman");
-                        if (donutProgress.getProgress() == 100) {
-                            //envio notificacion
-                            try {
-                                if(esValidoParaEnviarAlerta()){
-                                    PoliceAction policeAction = new PoliceAction(MainActivity.this);
-                                    policeAction.send(conf.getUserEmail(), conf.getToken(),
-                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                            String.valueOf(conf.getLastKnowLongitud()));
-                                }
-                            }catch (Exception e){
-                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        restarProgressBar();
-                        break;
-                }
-                return false;
+                return  alertPolicia(v,event);
             }
         });
 
@@ -196,30 +259,7 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.accion_doctor).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int eventaction = event.getAction();
-                switch (eventaction) {
-                    case MotionEvent.ACTION_DOWN:
-                        buildTimer("accion_doctor");
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        removeTimer("accion_doctor");
-                        if (donutProgress.getProgress() == 100) {
-                            //envio notificacion
-                            try {
-                                if(esValidoParaEnviarAlerta()){
-                                    AmbulanceAction ambulanceAction = new AmbulanceAction(MainActivity.this);
-                                    ambulanceAction.send(conf.getUserEmail(), conf.getToken(),
-                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                            String.valueOf(conf.getLastKnowLongitud()));
-                                }
-                            }catch (Exception e){
-                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        restarProgressBar();
-                        break;
-                }
-                return false;
+                return alertAmbulancia(v,event);
             }
         });
 
@@ -227,34 +267,154 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.accion_firefighter).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int eventaction = event.getAction();
-                switch (eventaction) {
-                    case MotionEvent.ACTION_DOWN:
-                        buildTimer("accion_firefighter");
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        removeTimer("accion_firefighter");
-                        if (donutProgress.getProgress() == 100) {
-                            //envio notificacion
-                            try {
-                                if(esValidoParaEnviarAlerta()){
-                                    FirefighterAction firefighterAction = new FirefighterAction(MainActivity.this);
-                                    firefighterAction.send(conf.getUserEmail(), conf.getToken(),
-                                            conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                            String.valueOf(conf.getLastKnowLongitud()));
-                                }
-                            }catch (Exception e){
-                                Toast.makeText(MainActivity.this, "Ocurrio un error inesperado", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        restarProgressBar();
-                        break;
-                }
-                return false;
+                return alertBombero(v, event);
+            }
+        });
+
+        //Criminal
+        findViewById(R.id.accion_criminal).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return  alertCriminal(v, event);
             }
         });
     }
 
+    //Alertas
+    private boolean alertVenus(View v, MotionEvent event){
+        int eventaction = event.getAction();
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                buildTimer("accion_venus");
+                return true;
+            case MotionEvent.ACTION_UP:
+                removeTimer("accion_venus");
+                if (donutProgress.getProgress() == 100) {
+                    //envio notificacion
+                    try {
+                        if(esValidoParaEnviarAlerta()){
+                            ViolenciaGeneroAction violenciaGeneroAction = new ViolenciaGeneroAction(MainActivity.this);
+                            violenciaGeneroAction.send(conf.getUserEmail(), conf.getToken(),
+                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                    String.valueOf(conf.getLastKnowLongitud()));
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                restarProgressBar();
+                break;
+        }
+        return false;
+    }
+
+    private boolean alertPolicia(View v, MotionEvent event){
+        int eventaction = event.getAction();
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                buildTimer("accion_policeman");
+                return true;
+            case MotionEvent.ACTION_UP:
+                removeTimer("accion_policeman");
+                if (donutProgress.getProgress() == 100) {
+                    //envio notificacion
+                    try {
+                        if(esValidoParaEnviarAlerta()){
+                            PoliceAction policeAction = new PoliceAction(MainActivity.this);
+                            policeAction.send(conf.getUserEmail(), conf.getToken(),
+                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                    String.valueOf(conf.getLastKnowLongitud()));
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                restarProgressBar();
+                break;
+        }
+        return false;
+    }
+
+    private boolean alertCriminal(View v, MotionEvent event){
+        int eventaction = event.getAction();
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                buildTimer("accion_criminal");
+                return true;
+            case MotionEvent.ACTION_UP:
+                removeTimer("accion_criminal");
+                if (donutProgress.getProgress() == 100) {
+                    //envio notificacion
+                    try {
+                        if(esValidoParaEnviarAlerta()){
+                            CriminalAction criminalAction = new CriminalAction(MainActivity.this);
+                            criminalAction.send(conf.getUserEmail(), conf.getToken(),
+                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                    String.valueOf(conf.getLastKnowLongitud()));
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                restarProgressBar();
+                break;
+        }
+        return false;
+    }
+
+    private boolean alertBombero(View v, MotionEvent event){
+        int eventaction = event.getAction();
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                buildTimer("accion_firefighter");
+                return true;
+            case MotionEvent.ACTION_UP:
+                removeTimer("accion_firefighter");
+                if (donutProgress.getProgress() == 100) {
+                    //envio notificacion
+                    try {
+                        if(esValidoParaEnviarAlerta()){
+                            FirefighterAction firefighterAction = new FirefighterAction(MainActivity.this);
+                            firefighterAction.send(conf.getUserEmail(), conf.getToken(),
+                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                    String.valueOf(conf.getLastKnowLongitud()));
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                restarProgressBar();
+                break;
+        }
+        return false;
+    }
+
+    private boolean alertAmbulancia(View v, MotionEvent event){
+        int eventaction = event.getAction();
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                buildTimer("accion_doctor");
+                return true;
+            case MotionEvent.ACTION_UP:
+                removeTimer("accion_doctor");
+                if (donutProgress.getProgress() == 100) {
+                    //envio notificacion
+                    try {
+                        if(esValidoParaEnviarAlerta()){
+                            AmbulanceAction ambulanceAction = new AmbulanceAction(MainActivity.this);
+                            ambulanceAction.send(conf.getUserEmail(), conf.getToken(),
+                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                                    String.valueOf(conf.getLastKnowLongitud()));
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                restarProgressBar();
+                break;
+        }
+        return false;
+    }
 
 
     private boolean esValidoParaEnviarAlerta(){
@@ -266,8 +426,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-        Toast.makeText(MainActivity.this, "Debe tener una ubicacion configurada para poder enviar" +
-                " alertas a su comunidad", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Debe tener una ubicación configurada para poder enviar alertas a su comunidad", Toast.LENGTH_LONG).show();
         return false;
     }
 
@@ -294,72 +453,6 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            ClipData clip = ClipData.newPlainText("text", conf.getToken());
-            ClipboardManager clipboard = (ClipboardManager)this.getSystemService(CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(clip);
-            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-            startActivityForResult(intent, 0);
-        }
-        if (id == R.id.action_cerrar_sesion) {
-            conf.deleteUserEmail();
-            Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
-            startActivityForResult(intent, 0);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -374,6 +467,12 @@ public class MainActivity extends AppCompatActivity
         LatLng central = new LatLng(-34.533849 ,  -58.788681);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 14));
+
+        loadMarkers("/getMarkers");
+    }
+
+
+    private void loadMarkers(String metodo){
         //Llama el servicio para poder cargar los datos
         //Ahora sera de la comuna del usuaario
         //TODO: que carge apartir de la posicion del usuario
@@ -382,7 +481,7 @@ public class MainActivity extends AppCompatActivity
         datos.put("email", conf.getUserEmail());
 
         WebService wb = new WebService(
-                URL.SERVER_URL + "/getMarkers",
+                URL.SERVER_URL + metodo,
                 datos,
                 this,
                 this,
@@ -392,89 +491,39 @@ public class MainActivity extends AppCompatActivity
         wb.execute("");
     }
 
+    private MainActivity getThis(){
+        return this;
+    }
 
     @Override
     public void processFinish(String result) {
         this.markers = JSONParse.ParseJSONMarker(result);
-
         runOnUiThread(new Runnable() {
             public void run() {
-
-
                 try {
                     for(ResultJSONMarker resultJSONMarker : markers){
-                        mMap.addMarker( buildMarkerOptions(resultJSONMarker.getLatitud(),
+                        try {
+                            mMap.addMarker(GoogleMapUtil.buildMarkerOptions(resultJSONMarker.getLatitud(),
                                     resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
-                                resultJSONMarker.getFecha()));
+                                    resultJSONMarker.getFecha(), true , getThis()));
+                        }catch (Exception e){
+                            String a = e.getMessage();
+                        }
+                    }
+
+                    if(EstadosMarkers.ESTADO.LOCAL.equals(estadoMarkers)){
+                        estadoMarkers = EstadosMarkers.ESTADO.PROVINCIAL;
+                        loadMarkers("getRestsMarkers");
+
+                    } else if(EstadosMarkers.ESTADO.PROVINCIAL.equals(estadoMarkers)){
+                        estadoMarkers = EstadosMarkers.ESTADO.NACIONAL;
+                        loadMarkers("getRestsProMarkers");
                     }
 
                 }catch (Exception e){
 
                 }
-
-
-             /*   //ambulancia
-                LatLng alert1 = new LatLng(-34.533849 ,  -58.788681);
-                //policia
-                LatLng alert2 = new LatLng(-34.5331491 ,   -58.7905443);
-                //bombero
-                LatLng alert3 = new LatLng(-34.5330151 ,   -58.7918482);
-
-                // use data here
-                mMap.addMarker(new MarkerOptions()
-                        .position(alert1)
-                        .title("Alerta ambulancia")
-                        .snippet("Fecha 12/02/2016 a las 08:00 hs")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ambulance)));
-
-                mMap.addMarker(new MarkerOptions()
-                        .position(alert2)
-                        .title("Alerta policia")
-                        .snippet("Fecha 12/02/2016 a las 21:00 hs")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.policecar)));
-
-
-                mMap.addMarker(new MarkerOptions()
-                        .position(alert3)
-                        .title("Alerta bomberos")
-                        .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck)));*/
             }
         });
-    }
-
-
-
-
-    private MarkerOptions buildMarkerOptions(Double latitud , Double longitud , String tipoAlerta , String fecha ){
-
-        LatLng alert = new LatLng(latitud ,  longitud);
-
-        if("Policia".equals(tipoAlerta)){
-            return new MarkerOptions()
-                    .position(alert)
-                    .title("Alerta policia")
-                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.policecar));
-        }else if("Ambulancia".equals(tipoAlerta)){
-            return new MarkerOptions()
-                    .position(alert)
-                    .title("Alerta ambulancia")
-                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ambulance));
-        }else if("Bombero".equals(tipoAlerta)){
-
-            return new MarkerOptions()
-                    .position(alert)
-                    .title("Alerta bomberos")
-                    .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck));
-        }
-
-        return new MarkerOptions()
-                .position(alert)
-                .title("Alerta")
-                .snippet("Fecha 15/02/2016 a las 22:00 hs")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.firetruck));
     }
 }
