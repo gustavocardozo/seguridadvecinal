@@ -76,20 +76,6 @@
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent" />
             </TableLayout>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:text="Alertas" android:id="@+id/textView11"
-                android:layout_below="@+id/tableLayout" android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:layout_marginLeft="10dp" android:layout_alignRight="@+id/tableLayout" android:layout_alignEnd="@+id/tableLayout" />
-
-            <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@+id/textView11" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_alignLeft="@+id/textView11" android:layout_alignStart="@+id/textView11"
-                android:id="@+id/tableLayout2"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="10dp">
-                <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall" android:text="Enviar nro. telefonico:" android:id="@+id/textView13" />
-                    <com.kyleduo.switchbutton.SwitchButton android:id="@+id/switch2" android:layout_column="1" style="@style/SwitchButtonStyleMD" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                </TableRow>
-            </TableLayout>
-
             <TextView
                 android:layout_width="362dp"
                 android:layout_height="wrap_content"

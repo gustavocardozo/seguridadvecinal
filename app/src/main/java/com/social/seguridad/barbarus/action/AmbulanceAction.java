@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by braian on 16/10/2016.
  */
-public class AmbulanceAction implements Asynchtask {
+public class AmbulanceAction extends  Action implements Asynchtask {
 
     public static String ALERTA= "Ambulancia";
     private static String NUMERO_ALERTA = "100";
@@ -29,7 +29,16 @@ public class AmbulanceAction implements Asynchtask {
         this.mainActivity = mainActivity;
     }
 
-    public void send(String email , String token , String lugar , String latitud , String longitud){
+    @Override
+    public void processFinish(String result) {
+        ResultJSON resultJSON = JSONParse.ParseJSON(result);
+        if(null != resultJSON && null != resultJSON.getMessage()){
+            Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void enviar(String email, String token, String lugar, String latitud, String longitud) {
         Log.d("Seguridad Vecinal", "Boton apretado");
         Map<String , String> datos = new HashMap<String, String>();
         datos.put("email", email);
@@ -50,13 +59,5 @@ public class AmbulanceAction implements Asynchtask {
                 true
         );
         wb.execute("");
-    }
-
-    @Override
-    public void processFinish(String result) {
-        ResultJSON resultJSON = JSONParse.ParseJSON(result);
-        if(null != resultJSON && null != resultJSON.getMessage()){
-            Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
-        }
     }
 }

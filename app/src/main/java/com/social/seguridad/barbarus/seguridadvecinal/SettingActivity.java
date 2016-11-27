@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kyleduo.switchbutton.SwitchButton;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -60,6 +62,13 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
     ArrayAdapter<String> adapterLocalidad;
     ArrayAdapter<String> adapterBarrios;
 
+    //Comobo usar configuracion actual
+    private SwitchButton switchButton;
+    private boolean switchValue = false;
+
+    private String lugarConfigurado;
+
+    //Carga de valores para el combo
     private ModelInit init = new ModelInit();
 
     @Override
@@ -72,10 +81,27 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         this.actualizarLocalizacionAVLoadingIndicatorView =
                 (AVLoadingIndicatorView) findViewById(R.id.loadingIndicatorView);
+        this.actualizarLocalizacionAVLoadingIndicatorView.hide();
+
+
+        this.lugarConfigurado = conf.getAddresses();
 
         this.localizacion = (TextView) findViewById(R.id.localizaciontextView);
-        this.localizacion.setText("Ninguna");
-        this.actualizarLocalizacionAVLoadingIndicatorView.hide();
+        this.localizacion.setText(this.lugarConfigurado);
+
+        switchButton = (SwitchButton) findViewById(R.id.switch1);
+        switchValue = conf.getUsarPosicionGuardad();
+        switchButton.setChecked( switchValue );
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!lugarConfigurado.equals("Ninguna")){
+                    switchValue = isChecked;
+                }else{
+                    Toast.makeText(getActivity(), "Primero actualize su ubicacion", Toast.LENGTH_SHORT).show();
+                    switchButton.setChecked( false );
+                }
+            }
+        });
 
         // Combos
         this.spinner_provincias = (Spinner) findViewById(R.id.spinProvincias);
@@ -94,6 +120,10 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
     }
 
 
+    private SettingActivity getActivity() {
+        return this;
+    }
+
     private void buildBottombar(){
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBarSettings);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -107,9 +137,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
     private void accionBottombar(@IdRes int tabId){
         if(tabId == R.id.tab_check){
             guardarConfiguracion();
-
         }else if(tabId == R.id.tab_cancelar){
-
             if(!conf.getEnSession()){
                 Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 0);
@@ -173,7 +201,8 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                localizacion.setText(null != conf.getLastKnowAddresses() ? conf.getLastKnowAddresses() : "Ninguna");
+                lugarConfigurado = conf.getLastKnowAddresses();
+                localizacion.setText(lugarConfigurado);
                 actualizarLocalizacionAVLoadingIndicatorView.hide();
                 runActualizacion = false;
             }
@@ -246,9 +275,23 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
+                //Configuracion de los conbos
                 conf.setLocalidad(localidad);
                 conf.setProvincia(provincia);
                 conf.setBarrio(barrio);
+                //Guardar si usar la posicion actual
+                //Y los campos que se guardaron ubicacion , latitud , longitud
+                conf.setUsarPosicionGuardada(switchValue);
+                if(switchValue){
+                    conf.setAddresses(lugarConfigurado);
+                    conf.setLatitud(conf.getLastKnowtLatitud());
+                    conf.setLongitud(conf.getLastKnowLongitud());
+                }else{
+                    conf.setAddresses(null);
+                    conf.setLatitud(0);
+                    conf.setLongitud(0);
+                }
+
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(SettingActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);

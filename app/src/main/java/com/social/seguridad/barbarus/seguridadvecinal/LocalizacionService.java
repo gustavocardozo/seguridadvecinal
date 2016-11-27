@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -92,6 +93,7 @@ public class LocalizacionService extends Service implements LocationListener {
                                 addresses.get(0).getThoroughfare() + " " +
                                 addresses.get(0).getFeatureName();
 
+                        conf.setLastKnowDate(new Date());
                         conf.setLastKnowAddresses( addressesValue);
                     }
                 } catch (Exception ioException) {

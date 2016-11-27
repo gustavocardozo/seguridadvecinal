@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by braian on 17/08/2016.
  */
@@ -20,8 +24,10 @@ public class Configuracion {
     private final String KEY_LAST_KNOW_LATITUD  = "LAST_KNOW_LATITUD";
     private final String KEY_LAST_KNOW_LONGITUD = "LAST_KNOW_LONGITUD";
     private final String KEY_LAST_KNOW_ADDRESS  = "LAST_KNOW_ADDRESS";
+    private final String KEY_LAST_KNOW_DATE     = "LAST_KNOW_DATE";
 
     //ubicaciones guardadas por el usuario como predeterminadas
+    private final String USAR_POSICION_GUARDADA = "USAR_POSICION_GUARDADA";
     private final String KEY_LATITUD    = "LATITUD";
     private final String KEY_LONGITUD   = "LONGITUD";
     private final String KEY_ADDRESS    = "ADDRESS";
@@ -33,8 +39,7 @@ public class Configuracion {
 
     private final String EN_SESSION = "EN_SESSION";
 
-    //Si la session ya guardo una ubicacion
-    private final String KEY_SESSION_UBICACION = "SESSION_UBICACION";
+
     //TEST
     // Otro test
 
@@ -78,12 +83,6 @@ public class Configuracion {
     }
 
 
-    public void deleteLastKnowLatitud(){
-        SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_LAST_KNOW_LATITUD, null);
-        editor.commit();
-    }
-
     public void setLastKnowLatitud(double value){
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(KEY_LAST_KNOW_LATITUD, String.valueOf(value) );
@@ -93,13 +92,6 @@ public class Configuracion {
     public Double getLastKnowtLatitud(){
         String value = getSettings().getString(KEY_LAST_KNOW_LATITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
-    }
-
-
-    public void deleteLastKnowLongitud(){
-        SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_LAST_KNOW_LONGITUD, null );
-        editor.commit();
     }
 
 
@@ -114,13 +106,6 @@ public class Configuracion {
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }
 
-
-    public void deleteLastKnowAddresses(){
-        SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_LAST_KNOW_ADDRESS, null);
-        editor.commit();
-    }
-
     public void setLastKnowAddresses(String addresses) {
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(KEY_LAST_KNOW_ADDRESS,addresses );
@@ -128,14 +113,40 @@ public class Configuracion {
     }
 
     public String getLastKnowAddresses(){
-        return getSettings().getString(KEY_LAST_KNOW_ADDRESS , null);
+        return getSettings().getString(KEY_LAST_KNOW_ADDRESS , "Ninguna");
     }
 
 
-    public void deleteLatitud(){
+    public void setLastKnowDate(Date date) {
         SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_LATITUD, null );
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String format = formatter.format(date);
+        editor.putString(KEY_LAST_KNOW_DATE, format );
         editor.commit();
+    }
+
+    public Date getLastKnowDate(){
+        String date =  getSettings().getString(KEY_LAST_KNOW_DATE , null);
+        if(date != null){
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date format = formatter.parse(date);
+            } catch (ParseException e) {
+                return  null;
+            }
+        }
+        return null;
+    }
+
+
+    public void setUsarPosicionGuardada(boolean b){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putBoolean(KEY_LATITUD , b );
+        editor.commit();
+    }
+
+    public boolean getUsarPosicionGuardad(){
+        return getSettings().getBoolean(KEY_LATITUD, false);
     }
 
     public void setLatitud(double value){
@@ -144,16 +155,11 @@ public class Configuracion {
         editor.commit();
     }
 
-    public double getLatitud(){
+    public Double getLatitud(){
         String value = getSettings().getString(KEY_LATITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
     }
 
-    public void deleteLongitud(){
-        SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_LONGITUD, null);
-        editor.commit();
-    }
 
     public void setLongitud(double value){
         SharedPreferences.Editor editor = getSettings().edit();
@@ -161,15 +167,9 @@ public class Configuracion {
         editor.commit();
     }
 
-    public double getLongitud(){
+    public Double getLongitud(){
         String value = getSettings().getString(KEY_LONGITUD, null);
         return null != value && value != "" ? Double.parseDouble(value) : null;
-    }
-
-    public void deleteAddresses(){
-        SharedPreferences.Editor editor = getSettings().edit();
-        editor.putString(KEY_ADDRESS, null);
-        editor.commit();
     }
 
     public void setAddresses(String addresses) {
@@ -179,8 +179,15 @@ public class Configuracion {
     }
 
     public String getAddresses(){
-        return getSettings().getString(KEY_LAST_KNOW_ADDRESS , null);
+        return getSettings().getString(KEY_LAST_KNOW_ADDRESS , "Ninguna");
     }
+
+
+
+
+
+
+
 
     public void setProvincia(String provincia){
         SharedPreferences.Editor editor = getSettings().edit();

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by braian on 18/11/2016.
  */
-public class ViolenciaGeneroAction implements Asynchtask {
+public class ViolenciaGeneroAction extends Action  implements Asynchtask {
 
     public static String ALERTA= "Violencia de Género";
     private static String NUMERO_ALERTA = "144";
@@ -29,7 +29,7 @@ public class ViolenciaGeneroAction implements Asynchtask {
         this.mainActivity = mainActivity;
     }
 
-    public void send(String email , String token , String lugar , String latitud , String longitud){
+    public void enviar(String email , String token , String lugar , String latitud , String longitud){
         Log.d("Seguridad Vecinal", "Boton apretado");
         Map<String , String> datos = new HashMap<String, String>();
         datos.put("email", email);

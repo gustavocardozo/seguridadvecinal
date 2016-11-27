@@ -45,6 +45,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import com.social.seguridad.barbarus.Estados.EstadosMarkers;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.action.Action;
 import com.social.seguridad.barbarus.action.AmbulanceAction;
 import com.social.seguridad.barbarus.action.CriminalAction;
 import com.social.seguridad.barbarus.action.FirefighterAction;
@@ -60,11 +61,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback , Asynchtask {
@@ -81,13 +84,10 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient client;
     private Map<String, Timer> buttonsThreads = new HashMap<String, Timer>();
 
-
     private Location mLastLocation;
     public LocationManager mLocationManager;
 
     private List<ResultJSONMarker> markers;
-
-
     private EstadosMarkers.ESTADO estadoMarkers = EstadosMarkers.ESTADO.LOCAL;
 
     @Override
@@ -96,12 +96,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         //CONF
         conf = new Configuracion(this);
-
         if(!conf.getEnSession()) {
             Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
             startActivityForResult(intent, 0);
         }
-
         //Floating y donut progress
         mFAB = (FloatingActionsMenu) findViewById(R.id.fab);
         donutProgress = (DonutProgress) findViewById(R.id.donut_progress);
@@ -111,10 +109,8 @@ public class MainActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         //Generacion de acciones de los botones
         buildButton();
-
         // GPS
         //Se inicia el servicio de GPS
         Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
@@ -298,12 +294,8 @@ public class MainActivity extends AppCompatActivity
                 if (donutProgress.getProgress() == 100) {
                     //envio notificacion
                     try {
-                        if(esValidoParaEnviarAlerta()){
-                            ViolenciaGeneroAction violenciaGeneroAction = new ViolenciaGeneroAction(MainActivity.this);
-                            violenciaGeneroAction.send(conf.getUserEmail(), conf.getToken(),
-                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                    String.valueOf(conf.getLastKnowLongitud()));
-                        }
+                        ViolenciaGeneroAction violenciaGeneroAction = new ViolenciaGeneroAction(MainActivity.this);
+                        enviarAlerta(violenciaGeneroAction);
                     }catch (Exception e){
                         Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
                     }
@@ -325,12 +317,8 @@ public class MainActivity extends AppCompatActivity
                 if (donutProgress.getProgress() == 100) {
                     //envio notificacion
                     try {
-                        if(esValidoParaEnviarAlerta()){
-                            PoliceAction policeAction = new PoliceAction(MainActivity.this);
-                            policeAction.send(conf.getUserEmail(), conf.getToken(),
-                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                    String.valueOf(conf.getLastKnowLongitud()));
-                        }
+                        PoliceAction policeAction = new PoliceAction(MainActivity.this);
+                        enviarAlerta(policeAction);
                     }catch (Exception e){
                         Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
                     }
@@ -352,12 +340,8 @@ public class MainActivity extends AppCompatActivity
                 if (donutProgress.getProgress() == 100) {
                     //envio notificacion
                     try {
-                        if(esValidoParaEnviarAlerta()){
-                            CriminalAction criminalAction = new CriminalAction(MainActivity.this);
-                            criminalAction.send(conf.getUserEmail(), conf.getToken(),
-                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                    String.valueOf(conf.getLastKnowLongitud()));
-                        }
+                        CriminalAction criminalAction = new CriminalAction(MainActivity.this);
+                        enviarAlerta(criminalAction);
                     }catch (Exception e){
                         Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
                     }
@@ -379,12 +363,8 @@ public class MainActivity extends AppCompatActivity
                 if (donutProgress.getProgress() == 100) {
                     //envio notificacion
                     try {
-                        if(esValidoParaEnviarAlerta()){
-                            FirefighterAction firefighterAction = new FirefighterAction(MainActivity.this);
-                            firefighterAction.send(conf.getUserEmail(), conf.getToken(),
-                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                    String.valueOf(conf.getLastKnowLongitud()));
-                        }
+                        FirefighterAction firefighterAction = new FirefighterAction(MainActivity.this);
+                        enviarAlerta(firefighterAction);
                     }catch (Exception e){
                         Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
                     }
@@ -406,12 +386,8 @@ public class MainActivity extends AppCompatActivity
                 if (donutProgress.getProgress() == 100) {
                     //envio notificacion
                     try {
-                        if(esValidoParaEnviarAlerta()){
-                            AmbulanceAction ambulanceAction = new AmbulanceAction(MainActivity.this);
-                            ambulanceAction.send(conf.getUserEmail(), conf.getToken(),
-                                    conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
-                                    String.valueOf(conf.getLastKnowLongitud()));
-                        }
+                        AmbulanceAction ambulanceAction = new AmbulanceAction(MainActivity.this);
+                        enviarAlerta(ambulanceAction);
                     }catch (Exception e){
                         Toast.makeText(MainActivity.this, "Ocurrió un error inesperado", Toast.LENGTH_SHORT).show();
                     }
@@ -423,18 +399,69 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void enviarAlerta(Action action){
+        if(conf.getUsarPosicionGuardad()){
+            if(esValidoParaEnviarAlertaConfigurado()){
+                action.enviar(conf.getUserEmail(), conf.getToken(),
+                        conf.getAddresses(), String.valueOf(conf.getLatitud()),
+                        String.valueOf(conf.getLongitud()));
+            }
+        }else
+            if(esValidoParaEnviarAlerta()){
+                action.enviar(conf.getUserEmail(), conf.getToken(),
+                        conf.getLastKnowAddresses(), String.valueOf(conf.getLastKnowtLatitud()),
+                        String.valueOf(conf.getLastKnowLongitud()));
+        }
+    }
+
+    private boolean esValidoParaEnviarAlertaConfigurado(){
+        if(conf.getUserEmail() != null
+                && conf.getToken() != null
+                && conf.getAddresses() != null
+                && conf.getLongitud() != null
+                && conf.getLatitud() != null){
+            return true;
+        }
+        Toast.makeText(MainActivity.this,
+                "Debe tener una ubicación configurada para poder enviar alertas a su comunidad",
+                Toast.LENGTH_LONG).show();
+        return false;
+    }
+
     private boolean esValidoParaEnviarAlerta(){
         if(conf.getUserEmail() != null
                 && conf.getToken() != null
                 && conf.getLastKnowAddresses() != null
                 && conf.getLastKnowLongitud() != null
-                && conf.getLastKnowtLatitud() != null){
+                && conf.getLastKnowtLatitud() != null
+                && esValidoUltimaFechadeAddresses(conf.getLastKnowDate())){
             return true;
         }
 
-        Toast.makeText(MainActivity.this, "Debe tener una ubicación configurada para poder enviar alertas a su comunidad", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this,
+                "Debe tener una ubicación para poder enviar alertas a su comunidad por favor active su gps",
+                Toast.LENGTH_LONG).show();
         return false;
     }
+
+
+    private  boolean esValidoUltimaFechadeAddresses(Date date){
+        if(date == null){
+            return  false;
+        }
+
+        if(getDateDiff(date , new Date() , TimeUnit.HOURS) < 24){
+            return true;
+        }
+
+        return  false;
+    }
+
+    private static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
+
 
     /**
      * Progreso hasta 100
@@ -464,16 +491,11 @@ public class MainActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-        } else {
-//            mMap.setMyLocationEnabled(true);
         }
-
         // Posicion para la camara
         //TODO:Dberia tomarlo de la configuracion
         LatLng central = new LatLng(-34.533849 ,  -58.788681);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 14));
-
         loadMarkers("/getMarkers");
     }
 
@@ -516,7 +538,6 @@ public class MainActivity extends AppCompatActivity
                             String a = e.getMessage();
                         }
                     }
-
                     if(EstadosMarkers.ESTADO.LOCAL.equals(estadoMarkers)){
                         estadoMarkers = EstadosMarkers.ESTADO.PROVINCIAL;
                         loadMarkers("getRestsMarkers");
@@ -525,7 +546,6 @@ public class MainActivity extends AppCompatActivity
                         estadoMarkers = EstadosMarkers.ESTADO.NACIONAL;
                         loadMarkers("getRestsProMarkers");
                     }
-
                 }catch (Exception e){
 
                 }
