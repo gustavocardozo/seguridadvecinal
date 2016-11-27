@@ -12,6 +12,7 @@ import com.social.seguridad.barbarus.action.CriminalAction;
 import com.social.seguridad.barbarus.action.FirefighterAction;
 import com.social.seguridad.barbarus.action.PoliceAction;
 import com.social.seguridad.barbarus.action.ViolenciaGeneroAction;
+import com.social.seguridad.barbarus.seguridadvecinal.R;
 
 /**
  * Created by braian on 20/11/2016.
@@ -22,6 +23,8 @@ public class GoogleMapUtil extends AppCompatActivity {
                                             String tipoAlerta ,
                                             String fecha ,
                                             Boolean snippet,
+                                                    Integer altura,
+                                                    Integer anchura,
                                             AppCompatActivity activity ){
         LatLng alert = new LatLng(latitud ,  longitud);
 
@@ -30,14 +33,18 @@ public class GoogleMapUtil extends AppCompatActivity {
                     .position(alert)
                     .title(PoliceAction.ALERTA_TITLE)
                     .snippet(snippet ? "Fecha " + fecha : "")
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("police",40,50,activity)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("police",
+                            anchura , altura
+                            ,activity)));
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.police));
         }else if(AmbulanceAction.ALERTA.equals(tipoAlerta)){
             return new MarkerOptions()
                     .position(alert)
                     .title(AmbulanceAction.ALERTA_TITLE)
                     .snippet(snippet ? "Fecha " + fecha : "")
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("ambulance",40,50,activity)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("ambulance",
+                            anchura , altura
+                            ,activity)));
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ambulance));
         }else if(FirefighterAction.ALERTA.equals(tipoAlerta)){
 
@@ -45,21 +52,27 @@ public class GoogleMapUtil extends AppCompatActivity {
                     .position(alert)
                     .title(FirefighterAction.ALERTA_TITLE)
                     .snippet(snippet ? "Fecha " + fecha : "")
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("fire",40,50,activity)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("fire",
+                            anchura , altura
+                            ,activity)));
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.fire));
         }else if (CriminalAction.ALERTA.equals(tipoAlerta)){
             return new MarkerOptions()
                     .position(alert)
                     .title(CriminalAction.ALERTA_TITLE)
                     .snippet(snippet ? "Fecha " + fecha : "")
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("shooting",40,50,activity)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("shooting",
+                            anchura , altura
+                            ,activity)));
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.shooting));
         }else if (ViolenciaGeneroAction.ALERTA.equals(tipoAlerta)){
             return new MarkerOptions()
                     .position(alert)
                     .title(ViolenciaGeneroAction.ALERTA_TITLE)
                     .snippet(snippet ? "Fecha " + fecha : "")
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("abduction",40,50,activity)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("abduction",
+                            anchura , altura
+                            ,activity)));
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.shooting));
         }
 
@@ -67,7 +80,8 @@ public class GoogleMapUtil extends AppCompatActivity {
                 .position(alert)
                 .title("Alerta")
                 .snippet(snippet ? "Fecha " + fecha : "")
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("pirates",40,50 , activity)));
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("pirates",
+                        anchura , altura , activity)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pirates));
     }
 

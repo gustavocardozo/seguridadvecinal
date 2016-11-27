@@ -183,6 +183,11 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int id) {
                         conf.cleanUserPreferences();
                         Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
+                        if(Build.VERSION.SDK_INT >= 11) {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        } else {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        }
                         startActivityForResult(intent, 0);
                     }
                 })
@@ -535,7 +540,10 @@ public class MainActivity extends AppCompatActivity
                         try {
                             mMap.addMarker(GoogleMapUtil.buildMarkerOptions(resultJSONMarker.getLatitud(),
                                     resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
-                                    resultJSONMarker.getFecha(), true , getThis()));
+                                    resultJSONMarker.getFecha(), true ,
+                                    Integer.valueOf(getResources().getString(R.string.imageAlto)),
+                                    Integer.valueOf(getResources().getString(R.string.imageAncho)),
+                                    getThis()));
                         }catch (Exception e){
                             String a = e.getMessage();
                         }
@@ -548,9 +556,7 @@ public class MainActivity extends AppCompatActivity
                         estadoMarkers = EstadosMarkers.ESTADO.NACIONAL;
                         loadMarkers("getRestsProMarkers");
                     }
-                }catch (Exception e){
-
-                }
+                }catch (Exception e){ }
             }
         });
     }

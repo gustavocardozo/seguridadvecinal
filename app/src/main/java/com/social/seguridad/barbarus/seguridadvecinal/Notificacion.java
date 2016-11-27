@@ -151,6 +151,9 @@ public class Notificacion extends AppCompatActivity implements OnMapReadyCallbac
         LatLng central = new LatLng(this.latitud,  this.longitud);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 14));
         GoogleMapUtil googleMapUtil = new GoogleMapUtil();
-        mMap.addMarker(googleMapUtil.buildMarkerOptions(this.latitud , this.longitud , this.alerta , "" , false, getThis()));
+        mMap.addMarker(googleMapUtil.buildMarkerOptions(this.latitud , this.longitud , this.alerta , "" , false,
+                Integer.valueOf(getResources().getString(R.string.imageAlto)),
+                Integer.valueOf(getResources().getString(R.string.imageAncho)),
+                getThis()));
     }
 }
