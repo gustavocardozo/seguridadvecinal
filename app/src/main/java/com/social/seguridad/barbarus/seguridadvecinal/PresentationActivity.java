@@ -45,17 +45,17 @@ public class PresentationActivity extends AppCompatActivity {
             }
         }*/
 
-        boolean check = true;
-        while(check){
+        //boolean check = true;
+        //while(check){
             if(checkPermissions()){
                 Intent servIntent = new Intent( getApplicationContext() , LocalizacionService.class);
                 startService(servIntent);
-                check = true;
+                //check = true;
             }else{
                 Toast.makeText(this, "Se necesita aceptar los permisos para el funcionamiento basico de la aplicacion",
                                 Toast.LENGTH_LONG).show();
             }
-        }
+        //}
 
         Button registrarseButton = (Button) findViewById(R.id.registrarseButton);
         registrarseButton.setOnClickListener(new View.OnClickListener() {

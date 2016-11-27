@@ -58,6 +58,11 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
 
         //CONF
         conf = new Configuracion(this);
+        if(!conf.getEnSession()) {
+            Intent intent = new Intent(ConfiguracionInicialActivity.this,
+                    PresentationActivity.class);
+            startActivityForResult(intent, 0);
+        }
 
         // Combos
         this.spinner_provincias = (Spinner) findViewById(R.id.spinProvincias);

@@ -78,6 +78,12 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
         //CONF
         conf = new Configuracion(this);
+        if(!conf.getEnSession()) {
+            Intent intent = new Intent(SettingActivity.this,
+                    PresentationActivity.class);
+            startActivityForResult(intent, 0);
+        }
+
 
         this.actualizarLocalizacionAVLoadingIndicatorView =
                 (AVLoadingIndicatorView) findViewById(R.id.loadingIndicatorView);

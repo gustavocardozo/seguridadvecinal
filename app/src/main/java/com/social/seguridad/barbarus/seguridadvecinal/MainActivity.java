@@ -97,7 +97,8 @@ public class MainActivity extends AppCompatActivity
         //CONF
         conf = new Configuracion(this);
         if(!conf.getEnSession()) {
-            Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
+            Intent intent = new Intent(MainActivity.this,
+                    PresentationActivity.class);
             startActivityForResult(intent, 0);
         }
         //Floating y donut progress
@@ -439,7 +440,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         Toast.makeText(MainActivity.this,
-                "Debe tener una ubicación para poder enviar alertas a su comunidad por favor active su gps",
+                "Debe tener una ubicación para poder enviar alertas a su comunidad por " +
+                        "favor active su gps o configure una por defecto desde configuraciones",
                 Toast.LENGTH_LONG).show();
         return false;
     }

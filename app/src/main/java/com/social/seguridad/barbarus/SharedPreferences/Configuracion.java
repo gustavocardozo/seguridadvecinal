@@ -141,12 +141,12 @@ public class Configuracion {
 
     public void setUsarPosicionGuardada(boolean b){
         SharedPreferences.Editor editor = getSettings().edit();
-        editor.putBoolean(KEY_LATITUD , b );
+        editor.putBoolean(USAR_POSICION_GUARDADA , b );
         editor.commit();
     }
 
     public boolean getUsarPosicionGuardad(){
-        return getSettings().getBoolean(KEY_LATITUD, false);
+        return getSettings().getBoolean(USAR_POSICION_GUARDADA, false);
     }
 
     public void setLatitud(double value){
