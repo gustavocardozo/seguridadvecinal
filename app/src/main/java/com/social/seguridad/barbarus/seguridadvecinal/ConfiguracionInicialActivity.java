@@ -2,6 +2,7 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -102,6 +103,21 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
         this.spinner_barrios.setAdapter(adapterBarrios);
         this.spinner_barrios.setOnItemSelectedListener(this);
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, SplashScreenActivity.class);
+
+        if(Build.VERSION.SDK_INT >= 11) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
     }
 
 
