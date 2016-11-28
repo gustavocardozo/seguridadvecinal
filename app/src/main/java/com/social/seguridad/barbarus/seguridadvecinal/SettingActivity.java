@@ -2,6 +2,7 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -299,8 +300,13 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 }
 
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(SettingActivity.this , MainActivity.class);
-                startActivityForResult(intent,0);
+                Intent intent = new Intent(this, MainActivity.class);
+                if(Build.VERSION.SDK_INT >= 11) {
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                } else {
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                startActivityForResult(intent, 0);
             }else{
                 Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();
             }
@@ -308,7 +314,6 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
             Toast.makeText(this, "No se ha podido conectar con el servidor" , Toast.LENGTH_LONG).show();
         }
     }
-
 
     private boolean validarDatos() {
         if(this.provincia == "")
@@ -319,6 +324,5 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
             return false;
 
         return true;
-
     }
 }

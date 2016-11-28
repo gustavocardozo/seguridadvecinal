@@ -54,6 +54,8 @@ import com.social.seguridad.barbarus.action.ViolenciaGeneroAction;
 import com.social.seguridad.barbarus.googleMapUtil.GoogleMapUtil;
 import com.social.seguridad.barbarus.json.JSONParse;
 import com.social.seguridad.barbarus.json.ResultJSONMarker;
+import com.social.seguridad.barbarus.models.Localidad;
+import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
 
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
 
     private List<ResultJSONMarker> markers;
     private EstadosMarkers.ESTADO estadoMarkers = EstadosMarkers.ESTADO.LOCAL;
+
+    private  ModelInit model = new ModelInit();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -500,9 +504,18 @@ public class MainActivity extends AppCompatActivity
             mMap.setMyLocationEnabled(true);
         }
         // Posicion para la camara
-        //TODO:Dberia tomarlo de la configuracion
-        LatLng central = new LatLng(-34.533849 ,  -58.788681);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 14));
+        Localidad localidad = model.getLocalidadByKey(conf.getProvincia(), conf.getLocalidad());
+        //Por DEFECTO argentina
+        double latitud = -40.4336595504857;
+        double longitud = -63.59892055;
+        //Si encuentra la localidad
+        if(null != localidad){
+            latitud = localidad.getLatitud();
+            longitud = localidad.getLongitud();
+        }
+        LatLng central = new LatLng(latitud , longitud);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 13));
+
         loadMarkers("/getMarkers");
     }
 
@@ -510,7 +523,6 @@ public class MainActivity extends AppCompatActivity
     private void loadMarkers(String metodo){
         //Llama el servicio para poder cargar los datos
         //Ahora sera de la comuna del usuaario
-        //TODO: que carge apartir de la posicion del usuario
         //TODO: que cada x tiempo vaya a buscar apartir de un horario nuevas alertas
         Map<String , String> datos = new HashMap<String, String>();
         datos.put("email", conf.getUserEmail());
@@ -548,14 +560,15 @@ public class MainActivity extends AppCompatActivity
                             String a = e.getMessage();
                         }
                     }
-                    if(EstadosMarkers.ESTADO.LOCAL.equals(estadoMarkers)){
+                    /*if(EstadosMarkers.ESTADO.LOCAL.equals(estadoMarkers)){
                         estadoMarkers = EstadosMarkers.ESTADO.PROVINCIAL;
                         loadMarkers("getRestsMarkers");
 
-                    } else if(EstadosMarkers.ESTADO.PROVINCIAL.equals(estadoMarkers)){
+                    }
+                    else if(EstadosMarkers.ESTADO.PROVINCIAL.equals(estadoMarkers)){
                         estadoMarkers = EstadosMarkers.ESTADO.NACIONAL;
                         loadMarkers("getRestsProMarkers");
-                    }
+                    }*/
                 }catch (Exception e){ }
             }
         });

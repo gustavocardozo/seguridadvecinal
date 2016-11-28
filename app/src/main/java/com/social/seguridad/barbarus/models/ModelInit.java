@@ -20,12 +20,11 @@ public class ModelInit {
         Provincia provinciaEntreRios = new Provincia("Entre Rios");
 
         /*Localidades*/
-        addLocalidad(provinciaBuenosAires, "Jose C Paz" , "El Salvador" ," Primavera" , "San Luis");
-        addLocalidad(provinciaBuenosAires ,"San migule" , "Mitre" ,"Otro" );
+        addLocalidad(provinciaBuenosAires, "Jose C Paz" , -34.524165019503684,  -58.77218160000001 ,"El Salvador" ," Primavera" , "San Luis");
+        addLocalidad(provinciaBuenosAires ,"San migule" ,-34.54615442105987 , -58.71619853344117 , "Mitre" ,"Otro" );
 
-        addLocalidad(provinciaSantaFe ,"San juan" , "Pepe" ,"Memo" );
-        addLocalidad(provinciaEntreRios ,"San juan" , "Pepe" ,"Memo" );
-
+        addLocalidad(provinciaSantaFe ,"San Francisco" , -31.42902780716834  , -62.08063277568971 , "25 de Mayo");
+        addLocalidad(provinciaEntreRios ,"Colòn" ,-32.22866547279823  , -58.148557275201426 , "Colòn" );
 
         provincias.add(provinciaBuenosAires);
         provincias.add(provinciaSantaFe);
@@ -76,9 +75,28 @@ public class ModelInit {
 
     }
 
+    public Localidad getLocalidadByKey(String provincia , String localidad){
+        List<String> c = new ArrayList<>();
+        for (Provincia p : provincias  ) {
+            if(p.getName().equals(provincia)){
+                for (Localidad l: p.getLocalidades()) {
+                    if(l.getName().equals(localidad)){
+                        return l;
+                    }
+                }
+            }
+        }
 
-    private void addLocalidad(Provincia provincia , String localidadName , String ... comunas){
-        Localidad localidad = new Localidad(localidadName);
+        return null;
+    }
+
+
+    private void addLocalidad(Provincia provincia ,
+                              String localidadName ,
+                              double latitud,
+                              double longitud,
+                              String ... comunas){
+        Localidad localidad = new Localidad(localidadName , latitud , longitud);
         for (String comuna : comunas  ) {
             addComuna(comuna, localidad);
         }

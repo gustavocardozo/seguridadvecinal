@@ -1,5 +1,6 @@
 package com.social.seguridad.barbarus.models;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +10,15 @@ import java.util.List;
 public class Localidad {
 
     private String name ;
+    private double latitud;
+    private double longitud;
+
     private List<Comuna> comunas = new ArrayList<>();
 
-    public Localidad(String name ){
+    public Localidad(String name , double latitud , double longitud){
         this.name = name;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public String getName(){
@@ -20,5 +26,13 @@ public class Localidad {
     }
     public List<Comuna> getComunas(){
         return this.comunas;
+    }
+
+    public double getLatitud(){
+        return this.latitud;
+    }
+
+    public double getLongitud(){
+        return  this.longitud;
     }
 }
