@@ -119,7 +119,7 @@ public class Configuracion {
 
     public void setLastKnowDate(Date date) {
         SharedPreferences.Editor editor = getSettings().edit();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String format = formatter.format(date);
         editor.putString(KEY_LAST_KNOW_DATE, format );
         editor.commit();
@@ -129,8 +129,9 @@ public class Configuracion {
         String date =  getSettings().getString(KEY_LAST_KNOW_DATE , null);
         if(date != null){
             try {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
                 Date format = formatter.parse(date);
+                return format;
             } catch (ParseException e) {
                 return  null;
             }
