@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/backgroundAlert"
-            fab:fab_title=" Violencia/Acoso de género "
+            fab:fab_title=" Acoso/Violencia de género "
             fab:fab_icon="@drawable/venus"
             fab:fab_size="mini" />
 
