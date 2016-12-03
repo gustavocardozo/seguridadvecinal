@@ -158,31 +158,55 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     private void cargarCombos() {
 
+        /*      Provincias      */
         List<String> provinciaList = init.getProvincias();
-        provincia = provinciaList.get(0);
+
+        //provincia = provinciaList.get(0);
         adapterProvincias = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, init.getProvincias());
         adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinner_provincias.setAdapter(adapterProvincias);
         this.spinner_provincias.setOnItemSelectedListener(this);
+        // seteo la pronvicia si tiene y la selecciono
+        if(conf.getProvincia() != "" && provinciaList.contains(conf.getProvincia())) {
+            provincia = provinciaList.get(provinciaList.indexOf(conf.getProvincia()));
+            int spinnerPosition = adapterProvincias.getPosition(provincia);
+            spinner_provincias.setSelection(spinnerPosition);
+        }else {// antes se seteaba solo asi, el primero
+            provincia = provinciaList.get(0);
+        }
 
+
+        /*      Localidades     */
         List<String> localidadesList = init.getLocalidadesByProvincia(provincia);
-        localidad = localidadesList.get(0);
         adapterLocalidad = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, localidadesList);
         adapterLocalidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinner_localidades.setAdapter(adapterLocalidad);
         this.spinner_localidades.setOnItemSelectedListener(this);
-        List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
-        barrio = comunaList.get(0);
+        if(conf.getLocalidad() != "" && localidadesList.contains(conf.getLocalidad())) {
+            localidad = localidadesList.get(localidadesList.indexOf(conf.getLocalidad()));
+            int spinnerPosition = adapterLocalidad.getPosition(localidad);
+            spinner_localidades.setSelection(spinnerPosition);
+        }else {// Antes se seteaba solo asi
+            localidad = provinciaList.get(0);
+        }
 
+        /*      Barrios (o comunas)     */
+        List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
         adapterBarrios = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,comunaList );
         adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         this.spinner_barrios.setAdapter(adapterBarrios);
         this.spinner_barrios.setOnItemSelectedListener(this);
-
+        if(conf.getBarrio() != "" && comunaList.contains(conf.getBarrio())) {
+            barrio = comunaList.get(comunaList.indexOf(conf.getBarrio()));
+            int spinnerPosition = adapterBarrios.getPosition(barrio);
+            spinner_barrios.setSelection(spinnerPosition);
+        }else {
+            barrio = comunaList.get(0);
+        }
     }
 
     private void actualizarLocalizacionAccion(View v) {
