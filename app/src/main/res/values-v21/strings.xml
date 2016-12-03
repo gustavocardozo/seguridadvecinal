@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Alerta Comunidad</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Configuración</string>
+    <string name="ninguna">Ninguna</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
+
+    <string name="provinciaLabel">Provincias</string>
+    <string name="localidadLabel">Localidades</string>
+    <string name="barrioLabel">Comunidades</string>
+
+    <string name="imageAlto">60</string>
+    <string name="imageAncho">50</string>
+
+    <string name="mensajeAlertaNoEnviada">Por favor, verifique su conexión a internet</string>
+    <string-array name="delitos_arrays">
+        <item>Robos</item>
+        <item>Arrebatos</item>
+        <item>Entraderas</item>
+        <item>Zona peligrosa</item>
+        <item>Gente sospechosa</item>
+    </string-array>
+
+</resources>
