@@ -2,13 +2,17 @@ package com.social.seguridad.barbarus.seguridadvecinal;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -16,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,6 +31,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +45,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -72,7 +80,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback , Asynchtask {
+        implements OnMapReadyCallback , Asynchtask , GoogleMap.OnMapLongClickListener {
 
     private static final int TIME_RUNTIME = 100;
 
@@ -503,6 +511,41 @@ public class MainActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
+
+        mMap.setOnMapLongClickListener(this);
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                Context context = getApplicationContext(); //or getActivity(), YourActivity.this, etc.
+
+                LinearLayout info = new LinearLayout(context);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(context);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(context);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+
         // Posicion para la camara
         Localidad localidad = model.getLocalidadByKey(conf.getProvincia(), conf.getLocalidad());
         //Por DEFECTO argentina
@@ -519,6 +562,25 @@ public class MainActivity extends AppCompatActivity
         loadMarkers("/getMarkers");
     }
 
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+        FragmentManager fm = getFragmentManager();
+        LoadMarkerDialogFragment dialogFragment = new LoadMarkerDialogFragment ();
+
+        Bundle args = new Bundle();
+        args.putDouble("latitude", latLng.latitude);
+        args.putDouble("longitude", latLng.longitude);
+        dialogFragment.setArguments(args);
+
+        dialogFragment.show(fm, "Sample Fragment");
+
+
+    }
+
+    private void dismiss() {
+
+    }
 
     private void loadMarkers(String metodo){
         //Llama el servicio para poder cargar los datos
@@ -542,6 +604,23 @@ public class MainActivity extends AppCompatActivity
         return this;
     }
 
+
+    public void addMarker(ResultJSONMarker resultJSONMarker){
+        try{
+            mMap.addMarker(GoogleMapUtil.buildMarkerOptions(resultJSONMarker.getLatitud(),
+                    resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
+                    resultJSONMarker.getFecha(),
+                    resultJSONMarker.getMessage(),
+                    true ,
+                    Integer.valueOf(getResources().getString(R.string.imageAlto)),
+                    Integer.valueOf(getResources().getString(R.string.imageAncho)),
+                    getThis()));
+        }catch (Exception e){
+
+        }
+    }
+
+
     @Override
     public void processFinish(String result) {
         this.markers = JSONParse.ParseJSONMarker(result);
@@ -552,7 +631,9 @@ public class MainActivity extends AppCompatActivity
                         try {
                             mMap.addMarker(GoogleMapUtil.buildMarkerOptions(resultJSONMarker.getLatitud(),
                                     resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
-                                    resultJSONMarker.getFecha(), true ,
+                                    resultJSONMarker.getFecha(),
+                                    resultJSONMarker.getMessage(),
+                                    true ,
                                     Integer.valueOf(getResources().getString(R.string.imageAlto)),
                                     Integer.valueOf(getResources().getString(R.string.imageAncho)),
                                     getThis()));

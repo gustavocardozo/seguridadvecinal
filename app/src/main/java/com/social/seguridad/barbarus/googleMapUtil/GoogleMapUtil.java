@@ -20,9 +20,10 @@ import com.social.seguridad.barbarus.seguridadvecinal.R;
 public class GoogleMapUtil extends AppCompatActivity {
 
     public static  MarkerOptions buildMarkerOptions(Double latitud , Double longitud ,
-                                            String tipoAlerta ,
-                                            String fecha ,
-                                            Boolean snippet,
+                                                    String tipoAlerta ,
+                                                    String fecha ,
+                                                    String mensaje,
+                                                    Boolean snippet,
                                                     Integer altura,
                                                     Integer anchura,
                                             AppCompatActivity activity ){
@@ -79,8 +80,8 @@ public class GoogleMapUtil extends AppCompatActivity {
         return new MarkerOptions()
                 .position(alert)
                 .title("Alerta")
-                .snippet(snippet ? "Fecha " + fecha : "")
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("pirates",
+                .snippet(mensaje != null? mensaje : "")
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("information",
                         anchura , altura , activity)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pirates));
     }
