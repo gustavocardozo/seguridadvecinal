@@ -32,7 +32,7 @@ public class MarcadorAction implements Asynchtask {
         this.activity = activity;
     }
 
-    public void enviar(String email , String token , String mensaje, String latitud , String longitud){
+    public void enviar(String email , String token , String mensaje,String titulo , String latitud , String longitud){
         Log.d("Seguridad Vecinal", "add Marker");
         Map<String , String> datos = new HashMap<String, String>();
         datos.put("email", email);
@@ -41,6 +41,7 @@ public class MarcadorAction implements Asynchtask {
         datos.put("latitud", latitud);
         datos.put("alerta", ALERTA);
         datos.put("mensaje", mensaje );
+        datos.put("titulo",titulo);
 
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
@@ -48,7 +49,7 @@ public class MarcadorAction implements Asynchtask {
         String strDate = sdfDate.format(now);
 
         this.resultJSONMarker =
-                new ResultJSONMarker(Double.valueOf(latitud) , Double.valueOf(longitud) , "", strDate , ALERTA , mensaje  );
+                new ResultJSONMarker(Double.valueOf(latitud) , Double.valueOf(longitud) , "", strDate , ALERTA , mensaje , titulo );
 
         WebService wb = new WebService(
                 URL.SERVER_URL + "/addMarker",

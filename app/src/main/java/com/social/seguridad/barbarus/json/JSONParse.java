@@ -36,6 +36,30 @@ public class JSONParse {
     }
 
 
+    public static ResultJSONConfiguracion ParseJSONConfiguracion(String json) {
+        ResultJSONConfiguracion resultJSON = null;
+
+        if (json != null) {
+            try {
+                JSONObject jObj = new JSONObject(json);
+                resultJSON = new ResultJSONConfiguracion(
+                        jObj.getDouble("latitud"),
+                        jObj.getDouble("longitud"),
+                        jObj.getString("status"),
+                        jObj.getString("message"));
+
+            } catch (JSONException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+        return resultJSON;
+    }
+
+
+
 
     public static List<ResultJSONMarker> ParseJSONMarker(String json){
         List<ResultJSONMarker> resultJSONMarkers = new ArrayList<>();
@@ -44,9 +68,8 @@ public class JSONParse {
             JSONArray markers = new JSONArray(json);
             for (int i = 0; i < markers.length(); i++) {
                 JSONObject c = markers.getJSONObject(i);
-
                 resultJSONMarkers.add(new ResultJSONMarker(c.getDouble("latitud") , c.getDouble("longitud"),
-                        c.getString("lugar") , c.getString("fecha") , c.getString("tipoAlerta"), c.getString("mensaje")));
+                        c.getString("lugar") , c.getString("fecha") , c.getString("tipoAlerta"), c.getString("mensaje"), c.getString("titulo")));
             }
 
         }catch (Exception e){

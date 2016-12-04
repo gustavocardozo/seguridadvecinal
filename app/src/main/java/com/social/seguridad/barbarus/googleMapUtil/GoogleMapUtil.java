@@ -23,6 +23,7 @@ public class GoogleMapUtil extends AppCompatActivity {
                                                     String tipoAlerta ,
                                                     String fecha ,
                                                     String mensaje,
+                                                    String titulo,
                                                     Boolean snippet,
                                                     Integer altura,
                                                     Integer anchura,
@@ -79,7 +80,7 @@ public class GoogleMapUtil extends AppCompatActivity {
 
         return new MarkerOptions()
                 .position(alert)
-                .title("Alerta")
+                .title(titulo != null? titulo : "Alerta")
                 .snippet(mensaje != null? mensaje : "")
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("information",
                         anchura , altura , activity)));

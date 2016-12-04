@@ -21,6 +21,7 @@ import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.json.JSONParse;
 import com.social.seguridad.barbarus.json.ResultJSON;
+import com.social.seguridad.barbarus.json.ResultJSONConfiguracion;
 import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
@@ -188,13 +189,16 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
 
     @Override
     public void processFinish(String result) {
-        ResultJSON resultJSON = JSONParse.ParseJSON(result);
+        ResultJSONConfiguracion resultJSON = JSONParse.ParseJSONConfiguracion(result);
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
                 conf.setLocalidad(localidad);
                 conf.setProvincia(provincia);
                 conf.setBarrio(barrio);
+                conf.setLatitudMap(resultJSON.getLatitud());
+                conf.setLongitud(resultJSON.getLongitud());
+
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ConfiguracionInicialActivity.this , MainActivity.class);
                 startActivityForResult(intent,0);

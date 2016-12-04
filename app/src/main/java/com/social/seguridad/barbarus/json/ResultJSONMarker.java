@@ -14,14 +14,17 @@ public class ResultJSONMarker {
     private String fecha;
     private String tipoAlerta;
     private String message;
+    private String titulo;
 
-    public ResultJSONMarker(double latitud, double longitud, String lugar, String fecha, String tipoAlerta, String message) {
+    public ResultJSONMarker(double latitud, double longitud, String lugar,
+                            String fecha, String tipoAlerta, String message , String titulo) {
         this.latitud = latitud;
         this.longitud = longitud;
         this.lugar = lugar;
         this.fecha = fecha;
         this.tipoAlerta = tipoAlerta;
         this.message = message;
+        this.titulo = titulo != null ? titulo : "";
     }
 
 
@@ -72,4 +75,7 @@ public class ResultJSONMarker {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getTitulo(){ return this.titulo; }
+    public void setTitulo(String titulo){ this.titulo = titulo ; }
 }

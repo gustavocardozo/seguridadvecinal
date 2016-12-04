@@ -523,10 +523,9 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public View getInfoContents(Marker marker) {
-
                 Context context = getApplicationContext(); //or getActivity(), YourActivity.this, etc.
-
                 LinearLayout info = new LinearLayout(context);
+                info.setPadding(5, 0 ,5 ,0);
                 info.setOrientation(LinearLayout.VERTICAL);
 
                 TextView title = new TextView(context);
@@ -547,14 +546,15 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Posicion para la camara
-        Localidad localidad = model.getLocalidadByKey(conf.getProvincia(), conf.getLocalidad());
+        //Localidad localidad = model.getLocalidadByKey(conf.getProvincia(), conf.getLocalidad());
         //Por DEFECTO argentina
         double latitud = -40.4336595504857;
         double longitud = -63.59892055;
         //Si encuentra la localidad
-        if(null != localidad){
-            latitud = localidad.getLatitud();
-            longitud = localidad.getLongitud();
+        if(null != conf.getLatitudMap()
+                && null != conf.getLongitudMap()){
+            latitud = conf.getLatitudMap();
+            longitud = conf.getLongitudMap();
         }
         LatLng central = new LatLng(latitud , longitud);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(central, 13));
@@ -564,7 +564,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-
         FragmentManager fm = getFragmentManager();
         LoadMarkerDialogFragment dialogFragment = new LoadMarkerDialogFragment ();
 
@@ -574,12 +573,6 @@ public class MainActivity extends AppCompatActivity
         dialogFragment.setArguments(args);
 
         dialogFragment.show(fm, "Sample Fragment");
-
-
-    }
-
-    private void dismiss() {
-
     }
 
     private void loadMarkers(String metodo){
@@ -611,6 +604,7 @@ public class MainActivity extends AppCompatActivity
                     resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
                     resultJSONMarker.getFecha(),
                     resultJSONMarker.getMessage(),
+                    resultJSONMarker.getTitulo(),
                     true ,
                     Integer.valueOf(getResources().getString(R.string.imageAlto)),
                     Integer.valueOf(getResources().getString(R.string.imageAncho)),
@@ -633,6 +627,7 @@ public class MainActivity extends AppCompatActivity
                                     resultJSONMarker.getLongitud(), resultJSONMarker.getTipoAlerta() ,
                                     resultJSONMarker.getFecha(),
                                     resultJSONMarker.getMessage(),
+                                    resultJSONMarker.getTitulo(),
                                     true ,
                                     Integer.valueOf(getResources().getString(R.string.imageAlto)),
                                     Integer.valueOf(getResources().getString(R.string.imageAncho)),

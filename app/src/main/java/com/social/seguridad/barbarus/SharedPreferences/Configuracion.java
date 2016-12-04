@@ -36,6 +36,8 @@ public class Configuracion {
     private final String PROVINCIA    = "PROVINCIA";
     private final String LOCALIDAD   = "LOCALIDAD";
     private final String BARRIO    = "BARRIO";
+    private final String LATITUD_MAP = "LATITUD_MAP";
+    private final String LONGITUD_MAP = "LONGITUD_MAP";
 
     private final String EN_SESSION = "EN_SESSION";
 
@@ -216,6 +218,30 @@ public class Configuracion {
     public String getBarrio(){
         return getSettings().getString(BARRIO ,"");
     }
+
+
+
+    public void setLatitudMap(Double latitud){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(LATITUD_MAP, String.valueOf(latitud) );
+        editor.commit();
+    }
+    public Double getLatitudMap(){
+        String value = getSettings().getString(LATITUD_MAP, null);
+        return null != value && value != "" ? Double.parseDouble(value) : null;
+    }
+
+    public void setLongitudMap(Double longitud){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(LONGITUD_MAP, String.valueOf(longitud) );
+        editor.commit();
+    }
+    public Double getLongitudMap(){
+        String value = getSettings().getString(LONGITUD_MAP, null);
+        return null != value && value != "" ? Double.parseDouble(value) : null;
+    }
+
+
 
     public void setEnSession(boolean en_session){
         SharedPreferences.Editor editor = getSettings().edit();

@@ -25,6 +25,7 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
+import com.social.seguridad.barbarus.json.ResultJSONConfiguracion;
 import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
@@ -302,7 +303,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     @Override
     public void processFinish(String result) {
-        ResultJSON resultJSON = JSONParse.ParseJSON(result);
+        ResultJSONConfiguracion resultJSON = JSONParse.ParseJSONConfiguracion(result);
 
         if(null != resultJSON){
             if(ResultJSON.STATUS_OK.equals(resultJSON.getStatus())){
@@ -310,6 +311,9 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 conf.setLocalidad(localidad);
                 conf.setProvincia(provincia);
                 conf.setBarrio(barrio);
+                conf.setLatitudMap(resultJSON.getLatitud());
+                conf.setLongitud(resultJSON.getLongitud());
+
                 //Guardar si usar la posicion actual
                 //Y los campos que se guardaron ubicacion , latitud , longitud
                 conf.setUsarPosicionGuardada(switchValue);

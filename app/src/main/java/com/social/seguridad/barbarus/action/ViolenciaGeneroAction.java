@@ -77,7 +77,7 @@ public class ViolenciaGeneroAction extends Action  implements Asynchtask {
             String strDate = sdfDate.format(now);
 
             this.resultJSONMarker =
-                    new ResultJSONMarker(Double.valueOf(latitud) , Double.valueOf(longitud) , lugar , strDate , ALERTA , ""  );
+                    new ResultJSONMarker(Double.valueOf(latitud) , Double.valueOf(longitud) , lugar , strDate , ALERTA , "" ,"" );
 
         }catch (Exception e){
 
