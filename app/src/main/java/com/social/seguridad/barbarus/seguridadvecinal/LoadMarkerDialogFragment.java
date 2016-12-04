@@ -41,6 +41,8 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
     private double latitud;
     private double longitud;
 
+    private Spinner spinner;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
@@ -53,6 +55,8 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
         descripcion = (EditText)rootView.findViewById(R.id.descripcionText);
         validator = new Validator(this);
         validator.setValidationListener(this);
+
+        this.spinner = (Spinner) rootView.findViewById(R.id.spinProvincias);
 
         Button cancelarButton = (Button) rootView.findViewById(R.id.cancelarButton);
         cancelarButton.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +102,7 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
         if(esValidoParaEnviarAlerta()){
             MarcadorAction marcadorAction = new MarcadorAction(getActivity());
             marcadorAction.enviar(conf.getUserEmail(), conf.getToken() , descripcion.getText().toString() ,
+                        spinner.getSelectedItem().toString(),
                         String.valueOf(this.latitud), String.valueOf(this.longitud));
             dismiss();
         }
