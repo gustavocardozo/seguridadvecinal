@@ -20,11 +20,13 @@ public class ModelInit {
         Provincia provinciaEntreRios = new Provincia("Entre Rios");
 
         /*Localidades*/
-        addLocalidad(provinciaBuenosAires, "Jose C Paz" , -34.524165019503684,  -58.77218160000001 ,"El Salvador" ," Primavera" , "San Luis");
-        addLocalidad(provinciaBuenosAires ,"San migule" ,-34.54615442105987 , -58.71619853344117 , "Mitre" ,"Otro" );
+        addLocalidad(provinciaBuenosAires, "Jose C Paz" , -34.524165019503684,  -58.77218160000001 ,"Alberdi","El Salvador","Maximo" ,"Parque Alvear","Primavera" ,"Santa Rita", "San Luis","Trujui");
+        addLocalidad(provinciaBuenosAires ,"San miguel" ,-34.54615442105987 , -58.71619853344117 , "Mitre" ,"Otro");
+        addLocalidad(provinciaBuenosAires, "Tortuguitas",-34.49596349999999,-58.7882658,"Parque Alvear II","Tortuguitas");
+        addLocalidad(provinciaBuenosAires, "Capital Federal",-34.6036844,-58.3815591,"Agronomia","Almagro","Balvanera","Barracas","Belgrano","Boedo","Chacarita","Colegiales","Constitucion","Caballito","Microcentro","Monserrat","Nunez","Nueva Pompeya","Palermo","Parque Chacabuco","Puerto Madero","Flores","Floresta","Recoleta","Retiro","San Cristobal","San Nicolas","San Telmo","Villa Deboto","Villa Crespo");
 
         addLocalidad(provinciaSantaFe ,"San Francisco" , -31.42902780716834  , -62.08063277568971 , "25 de Mayo");
-        addLocalidad(provinciaEntreRios ,"Colòn" ,-32.22866547279823  , -58.148557275201426 , "Colòn" );
+        addLocalidad(provinciaEntreRios ,"Colón" ,-32.22866547279823  , -58.148557275201426 , "Colón" );
 
         provincias.add(provinciaBuenosAires);
         provincias.add(provinciaSantaFe);

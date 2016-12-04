@@ -610,7 +610,7 @@ public class MainActivity extends AppCompatActivity
                     Integer.valueOf(getResources().getString(R.string.imageAncho)),
                     getThis()));
         }catch (Exception e){
-
+            Toast.makeText(MainActivity.this, "Ocurrió un error inesperado. Intente nuevamente mas tarde", Toast.LENGTH_SHORT).show();
         }
     }
 

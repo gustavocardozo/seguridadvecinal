@@ -52,6 +52,10 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     TextView localizacion;
 
+    private boolean cargaProvincia = true;
+    private boolean cargaLocalidad = true;
+    private boolean cargaBarrio = true;
+
     String provincia = "";
     String localidad = "";
     String barrio = "";
@@ -176,6 +180,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         }else {// antes se seteaba solo asi, el primero
             provincia = provinciaList.get(0);
         }
+        this.cargaProvincia = true;
 
 
         /*      Localidades     */
@@ -190,8 +195,9 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
             int spinnerPosition = adapterLocalidad.getPosition(localidad);
             spinner_localidades.setSelection(spinnerPosition);
         }else {// Antes se seteaba solo asi
-            localidad = provinciaList.get(0);
+            localidad = localidadesList.get(0);
         }
+        this.cargaLocalidad = true;
 
         /*      Barrios (o comunas)     */
         List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
@@ -208,6 +214,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         }else {
             barrio = comunaList.get(0);
         }
+        this.cargaBarrio = true;
     }
 
     private void actualizarLocalizacionAccion(View v) {
@@ -245,10 +252,15 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.spinProvincias:
+                if(!cargaProvincia)
+                    provincia = parent.getItemAtPosition(position).toString();
+                else
+                    cargaProvincia = false;
 
-                provincia = parent.getItemAtPosition(position).toString();
+                int spinnerPositionP = adapterProvincias.getPosition(provincia);
+                spinner_provincias.setSelection(spinnerPositionP);
                 List<String> localidades =init.getLocalidadesByProvincia(provincia);
-                localidad = localidades.get(0);
+                //localidad = localidades.get(0);
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                         android.R.layout.simple_spinner_item, localidades    );
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -257,21 +269,32 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
                 break;
             case R.id.spinLocalidades:
-
-                this.localidad = parent.getItemAtPosition(position).toString();
+                if(!cargaLocalidad)
+                    this.localidad = parent.getItemAtPosition(position).toString();
+                else
+                    cargaLocalidad = false;
+                int spinnerPositionL = adapterLocalidad.getPosition(localidad);
+                spinner_localidades.setSelection(spinnerPositionL);
                 List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
-                barrio = comunaList.get(0);
+                //barrio = comunaList.get(0);
                 adapterBarrios = new ArrayAdapter<String>(this,
                         android.R.layout.simple_spinner_item,comunaList );
                 adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 this.spinner_barrios.setAdapter(adapterBarrios);
 
+
                 break;
 
             case R.id.spinBarrios:
-                this.barrio = parent.getItemAtPosition(position).toString();
+                if(!cargaBarrio)
+                    this.barrio = parent.getItemAtPosition(position).toString();
+                else
+                    cargaBarrio = false;
+                int spinnerPositionB = adapterBarrios.getPosition(barrio);
+                spinner_barrios.setSelection(spinnerPositionB);
                 break;
         }
+
     }
 
     @Override
