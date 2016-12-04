@@ -525,7 +525,7 @@ public class MainActivity extends AppCompatActivity
             public View getInfoContents(Marker marker) {
                 Context context = getApplicationContext(); //or getActivity(), YourActivity.this, etc.
                 LinearLayout info = new LinearLayout(context);
-                info.setPadding(5, 0 ,5 ,0);
+                info.setPadding(10, 0 ,10 ,0);
                 info.setOrientation(LinearLayout.VERTICAL);
 
                 TextView title = new TextView(context);
@@ -545,8 +545,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        // Posicion para la camara
-        //Localidad localidad = model.getLocalidadByKey(conf.getProvincia(), conf.getLocalidad());
         //Por DEFECTO argentina
         double latitud = -40.4336595504857;
         double longitud = -63.59892055;

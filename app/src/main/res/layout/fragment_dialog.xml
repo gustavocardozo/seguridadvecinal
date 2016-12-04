@@ -36,12 +36,14 @@
         android:id="@+id/agregarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar" />
+        android:text="Agregar"
+        android:background="@color/colorAccent" />
 
     <Button
         android:id="@+id/cancelarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancelar" />
+        android:text="Cancelar"
+        android:background="@android:color/holo_green_dark" />
 
 </LinearLayout>

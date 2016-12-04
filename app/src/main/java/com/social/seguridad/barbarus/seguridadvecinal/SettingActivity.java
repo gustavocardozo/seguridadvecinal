@@ -26,6 +26,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.json.ResultJSONConfiguracion;
+import com.social.seguridad.barbarus.models.Localidad;
 import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
@@ -52,9 +53,14 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     TextView localizacion;
 
-    private boolean cargaProvincia = true;
-    private boolean cargaLocalidad = true;
-    private boolean cargaBarrio = true;
+    private enum CARGA_COMBO{
+        CARGA_COMPLETA,
+        CARGA_PROVINCIA,
+        CARGA_LOCALIDAD,
+        CARGA_COMUNA
+    }
+
+    private CARGA_COMBO estadoCombo = CARGA_COMBO.CARGA_COMPLETA;
 
     String provincia = "";
     String localidad = "";
@@ -76,6 +82,10 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     //Carga de valores para el combo
     private ModelInit init = new ModelInit();
+
+
+
+    private boolean loadFirst = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,11 +186,12 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         if(conf.getProvincia() != "" && provinciaList.contains(conf.getProvincia())) {
             provincia = provinciaList.get(provinciaList.indexOf(conf.getProvincia()));
             int spinnerPosition = adapterProvincias.getPosition(provincia);
-            spinner_provincias.setSelection(spinnerPosition);
+            spinner_provincias.setSelection(spinnerPosition , false);
+            estadoCombo = CARGA_COMBO.CARGA_PROVINCIA;
         }else {// antes se seteaba solo asi, el primero
             provincia = provinciaList.get(0);
         }
-        this.cargaProvincia = true;
+        //this.cargaProvincia = true;
 
 
         /*      Localidades     */
@@ -190,14 +201,15 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         adapterLocalidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinner_localidades.setAdapter(adapterLocalidad);
         this.spinner_localidades.setOnItemSelectedListener(this);
+
         if(conf.getLocalidad() != "" && localidadesList.contains(conf.getLocalidad())) {
             localidad = localidadesList.get(localidadesList.indexOf(conf.getLocalidad()));
             int spinnerPosition = adapterLocalidad.getPosition(localidad);
-            spinner_localidades.setSelection(spinnerPosition);
+            spinner_localidades.setSelection(spinnerPosition, false);
         }else {// Antes se seteaba solo asi
             localidad = localidadesList.get(0);
         }
-        this.cargaLocalidad = true;
+        //this.cargaLocalidad = true;
 
         /*      Barrios (o comunas)     */
         List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
@@ -210,11 +222,11 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         if(conf.getBarrio() != "" && comunaList.contains(conf.getBarrio())) {
             barrio = comunaList.get(comunaList.indexOf(conf.getBarrio()));
             int spinnerPosition = adapterBarrios.getPosition(barrio);
-            spinner_barrios.setSelection(spinnerPosition);
+            spinner_barrios.setSelection(spinnerPosition, false);
         }else {
             barrio = comunaList.get(0);
         }
-        this.cargaBarrio = true;
+        //this.cargaBarrio = true;
     }
 
     private void actualizarLocalizacionAccion(View v) {
@@ -250,50 +262,66 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.spinProvincias:
-                if(!cargaProvincia)
+
+        if(CARGA_COMBO.CARGA_COMPLETA.equals(estadoCombo)){
+            switch (parent.getId()) {
+                case R.id.spinProvincias:
+                /*if(!cargaProvincia)
                     provincia = parent.getItemAtPosition(position).toString();
                 else
-                    cargaProvincia = false;
+                    cargaProvincia = false;*/
 
-                int spinnerPositionP = adapterProvincias.getPosition(provincia);
-                spinner_provincias.setSelection(spinnerPositionP);
-                List<String> localidades =init.getLocalidadesByProvincia(provincia);
-                //localidad = localidades.get(0);
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item, localidades    );
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                this.spinner_localidades.setAdapter(dataAdapter);
+                    provincia = parent.getItemAtPosition(position).toString();
+                    int spinnerPositionP = adapterProvincias.getPosition(provincia);
+                    spinner_provincias.setSelection(spinnerPositionP);
+                    List<String> localidades =init.getLocalidadesByProvincia(provincia);
+                    //localidad = localidades.get(0);
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                            android.R.layout.simple_spinner_item, localidades    );
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this.spinner_localidades.setAdapter(dataAdapter);
 
 
-                break;
-            case R.id.spinLocalidades:
-                if(!cargaLocalidad)
+                    break;
+                case R.id.spinLocalidades:
+                /*if(!cargaLocalidad)
                     this.localidad = parent.getItemAtPosition(position).toString();
                 else
-                    cargaLocalidad = false;
-                int spinnerPositionL = adapterLocalidad.getPosition(localidad);
-                spinner_localidades.setSelection(spinnerPositionL);
-                List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
-                //barrio = comunaList.get(0);
-                adapterBarrios = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item,comunaList );
-                adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                this.spinner_barrios.setAdapter(adapterBarrios);
+                    cargaLocalidad = false;*/
+                    this.localidad = parent.getItemAtPosition(position).toString();
+
+                    int spinnerPositionL = adapterLocalidad.getPosition(localidad);
+                    spinner_localidades.setSelection(spinnerPositionL);
+                    List<String> comunaList = init.getComunaByLocalidad(provincia , localidad);
+                    //barrio = comunaList.get(0);
+                    adapterBarrios = new ArrayAdapter<String>(this,
+                            android.R.layout.simple_spinner_item,comunaList );
+                    adapterBarrios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this.spinner_barrios.setAdapter(adapterBarrios);
 
 
-                break;
+                    break;
 
-            case R.id.spinBarrios:
-                if(!cargaBarrio)
+                case R.id.spinBarrios:
+                /*if(!cargaBarrio)
                     this.barrio = parent.getItemAtPosition(position).toString();
                 else
-                    cargaBarrio = false;
-                int spinnerPositionB = adapterBarrios.getPosition(barrio);
-                spinner_barrios.setSelection(spinnerPositionB);
-                break;
+                    cargaBarrio = false;*/
+                    this.barrio = parent.getItemAtPosition(position).toString();
+                /*int spinnerPositionB = adapterBarrios.getPosition(barrio);
+                spinner_barrios.setSelection(spinnerPositionB);*/
+                    break;
+            }
+        }else{
+            if(CARGA_COMBO.CARGA_PROVINCIA.equals(estadoCombo)){
+                estadoCombo = CARGA_COMBO.CARGA_LOCALIDAD;
+            }else if(CARGA_COMBO.CARGA_LOCALIDAD.equals(estadoCombo)){
+                estadoCombo = CARGA_COMBO.CARGA_COMUNA;
+            }else if (CARGA_COMBO.CARGA_COMUNA.equals(estadoCombo)){
+                estadoCombo = CARGA_COMBO.CARGA_COMPLETA;
+            }
         }
+
 
     }
 
@@ -308,6 +336,8 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
         datos.put("localidad", localidad);
         datos.put("comuna", barrio);
         datos.put("email", conf.getUserEmail());
+        Localidad localidadObj = init.getLocalidadByKey(provincia, localidad);
+        datos.put("especifico", String.valueOf(localidadObj != null ? localidadObj.getEspecifico() : false));
 
         if(validarDatos()) {
                 WebService wb = new WebService(
@@ -335,7 +365,7 @@ public class SettingActivity extends AppCompatActivity implements Asynchtask,Ada
                 conf.setProvincia(provincia);
                 conf.setBarrio(barrio);
                 conf.setLatitudMap(resultJSON.getLatitud());
-                conf.setLongitud(resultJSON.getLongitud());
+                conf.setLongitudMap(resultJSON.getLongitud());
 
                 //Guardar si usar la posicion actual
                 //Y los campos que se guardaron ubicacion , latitud , longitud

@@ -67,9 +67,14 @@ public class JSONParse {
         try {
             JSONArray markers = new JSONArray(json);
             for (int i = 0; i < markers.length(); i++) {
-                JSONObject c = markers.getJSONObject(i);
-                resultJSONMarkers.add(new ResultJSONMarker(c.getDouble("latitud") , c.getDouble("longitud"),
-                        c.getString("lugar") , c.getString("fecha") , c.getString("tipoAlerta"), c.getString("mensaje"), c.getString("titulo")));
+                try {
+                    JSONObject c = markers.getJSONObject(i);
+                    resultJSONMarkers.add(new ResultJSONMarker(c.getDouble("latitud") , c.getDouble("longitud"),
+                            c.getString("lugar") , c.getString("fecha") , c.getString("tipoAlerta"),
+                            c.getString("mensaje"), c.getString("titulo")));
+                }catch (Exception e){
+                    //ERROR AL OBTENER LOS VALORES
+                }
             }
 
         }catch (Exception e){

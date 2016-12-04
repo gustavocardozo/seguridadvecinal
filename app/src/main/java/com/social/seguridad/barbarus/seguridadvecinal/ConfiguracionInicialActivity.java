@@ -22,6 +22,7 @@ import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.json.JSONParse;
 import com.social.seguridad.barbarus.json.ResultJSON;
 import com.social.seguridad.barbarus.json.ResultJSONConfiguracion;
+import com.social.seguridad.barbarus.models.Localidad;
 import com.social.seguridad.barbarus.models.ModelInit;
 import com.social.seguridad.barbarus.webservice.Asynchtask;
 import com.social.seguridad.barbarus.webservice.WebService;
@@ -172,6 +173,9 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
         datos.put("comuna", barrio);
         datos.put("email", conf.getUserEmail());
 
+        Localidad localidadObj = init.getLocalidadByKey(provincia, localidad);
+        datos.put("especifico", String.valueOf(localidadObj != null ? localidadObj.getEspecifico() : false));
+
         if(validarDatos()) {
             WebService wb = new WebService(
                     URL.SERVER_URL + "/updateLocationUser",
@@ -197,7 +201,7 @@ public class ConfiguracionInicialActivity extends AppCompatActivity implements A
                 conf.setProvincia(provincia);
                 conf.setBarrio(barrio);
                 conf.setLatitudMap(resultJSON.getLatitud());
-                conf.setLongitud(resultJSON.getLongitud());
+                conf.setLongitudMap(resultJSON.getLongitud());
 
                 Toast.makeText(this, "Sus datos fueron guardados correctamente" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ConfiguracionInicialActivity.this , MainActivity.class);

@@ -56,7 +56,7 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
         validator = new Validator(this);
         validator.setValidationListener(this);
 
-        this.spinner = (Spinner) rootView.findViewById(R.id.spinProvincias);
+        this.spinner = (Spinner) rootView.findViewById(R.id.delitosSpinner);
 
         Button cancelarButton = (Button) rootView.findViewById(R.id.cancelarButton);
         cancelarButton.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +102,7 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
         if(esValidoParaEnviarAlerta()){
             MarcadorAction marcadorAction = new MarcadorAction(getActivity());
             marcadorAction.enviar(conf.getUserEmail(), conf.getToken() , descripcion.getText().toString() ,
-                        spinner.getSelectedItem().toString(),
+                        this.spinner.getSelectedItem().toString(),
                         String.valueOf(this.latitud), String.valueOf(this.longitud));
             dismiss();
         }

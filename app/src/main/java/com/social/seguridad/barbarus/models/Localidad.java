@@ -10,15 +10,18 @@ import java.util.List;
 public class Localidad {
 
     private String name ;
-    private double latitud;
-    private double longitud;
+    //Si en la busqueda de latitud y longitud tiene que ser especifico
+    private boolean especifico = false;
 
     private List<Comuna> comunas = new ArrayList<>();
 
-    public Localidad(String name , double latitud , double longitud){
+    public Localidad(String name ){
         this.name = name;
-        this.latitud = latitud;
-        this.longitud = longitud;
+    }
+
+    public Localidad(String name , boolean especifico){
+        this.name = name;
+        this.especifico = especifico;
     }
 
     public String getName(){
@@ -28,11 +31,6 @@ public class Localidad {
         return this.comunas;
     }
 
-    public double getLatitud(){
-        return this.latitud;
-    }
 
-    public double getLongitud(){
-        return  this.longitud;
-    }
+    public boolean getEspecifico(){return  this.especifico; }
 }
