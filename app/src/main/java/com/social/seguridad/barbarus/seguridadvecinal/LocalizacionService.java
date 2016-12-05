@@ -88,9 +88,9 @@ public class LocalizacionService extends Service implements LocationListener {
                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     if(addresses != null && addresses.size() > 0){
                         String addressesValue =
-                                //addresses.get(0).getAdminArea() + " " +
+                                addresses.get(0).getAdminArea() + " " +
                                 addresses.get(0).getLocality() + " " +
-                                //addresses.get(0).getThoroughfare() + " " +
+                                addresses.get(0).getThoroughfare() + " " +
                                 addresses.get(0).getFeatureName();
 
                         conf.setLastKnowDate(new Date());
