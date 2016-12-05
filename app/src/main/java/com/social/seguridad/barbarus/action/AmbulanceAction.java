@@ -43,7 +43,7 @@ public class AmbulanceAction extends  Action implements Asynchtask {
 
             Toast.makeText(this.mainActivity, resultJSON.getMessage() , Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(this.mainActivity, R.string.mensajeAlertaNoEnviada , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.mainActivity, R.string.mensajeNoSalio , Toast.LENGTH_SHORT).show();
         }
     }
 
