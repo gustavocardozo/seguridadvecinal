@@ -90,7 +90,7 @@ public class LocalizacionService extends Service implements LocationListener {
                         String addressesValue =
                                 //addresses.get(0).getAdminArea() + " " +
                                 addresses.get(0).getLocality() + " " +
-                                //addresses.get(0).getThoroughfare() + " " +
+                                addresses.get(0).getThoroughfare() + " " +
                                 addresses.get(0).getFeatureName();
 
                         conf.setLastKnowDate(new Date());

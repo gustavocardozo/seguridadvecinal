@@ -55,6 +55,7 @@ import com.social.seguridad.barbarus.SharedPreferences.Configuracion;
 import com.social.seguridad.barbarus.URL.URL;
 import com.social.seguridad.barbarus.action.Action;
 import com.social.seguridad.barbarus.action.AmbulanceAction;
+import com.social.seguridad.barbarus.action.CerrarSesion;
 import com.social.seguridad.barbarus.action.CriminalAction;
 import com.social.seguridad.barbarus.action.FirefighterAction;
 import com.social.seguridad.barbarus.action.PoliceAction;
@@ -193,18 +194,23 @@ public class MainActivity extends AppCompatActivity
                 .setCancelable(false)
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        conf.cleanUserPreferences();
-                        Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
-                        if(Build.VERSION.SDK_INT >= 11) {
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        } else {
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        }
-                        startActivityForResult(intent, 0);
+                        CerrarSesion cerrarSesion = new CerrarSesion(getThis());
+                        cerrarSesion.cerrar(conf.getUserEmail(), conf.getToken());
                     }
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    public void cerrarSesion(){
+        conf.cleanUserPreferences();
+        Intent intent = new Intent(MainActivity.this, PresentationActivity.class);
+        if(Build.VERSION.SDK_INT >= 11) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        startActivityForResult(intent, 0);
     }
 
     /**
@@ -643,7 +649,9 @@ public class MainActivity extends AppCompatActivity
                         estadoMarkers = EstadosMarkers.ESTADO.NACIONAL;
                         loadMarkers("getRestsProMarkers");
                     }*/
-                }catch (Exception e){ }
+                }catch (Exception e){
+                    String a = e.getMessage();
+                }
             }
         });
     }

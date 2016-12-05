@@ -34,16 +34,17 @@
 
     <Button
         android:id="@+id/agregarButton"
-        android:layout_width="match_parent"
+        android:layout_width="274dp"
         android:layout_height="wrap_content"
         android:text="Agregar"
         android:background="@color/colorAccent" />
 
     <Button
         android:id="@+id/cancelarButton"
-        android:layout_width="match_parent"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:text="Cancelar"
-        android:background="@android:color/holo_green_dark" />
+        android:background="@color/abc_search_url_text_normal"
+        android:layout_marginTop="5dp" />
 
 </LinearLayout>

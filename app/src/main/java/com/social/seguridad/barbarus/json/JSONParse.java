@@ -74,6 +74,7 @@ public class JSONParse {
                             c.getString("mensaje"), c.getString("titulo")));
                 }catch (Exception e){
                     //ERROR AL OBTENER LOS VALORES
+                    String a = e.getMessage();
                 }
             }
 
