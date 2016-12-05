@@ -144,7 +144,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Validator.
                 Toast.makeText(this, resultJSON.getMessage() , Toast.LENGTH_LONG).show();
             }
         }else{
-            Toast.makeText(this, "No se ha podido conectar con el servidor" , Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.mensajeNoSalio , Toast.LENGTH_LONG).show();
         }
     }
 

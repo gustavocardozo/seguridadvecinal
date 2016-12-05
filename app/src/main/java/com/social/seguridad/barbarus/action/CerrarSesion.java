@@ -58,7 +58,7 @@ public class CerrarSesion implements Asynchtask {
                 Toast.makeText(this.activity, resultJSON.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }else{
-            Toast.makeText(this.activity, R.string.mensajeAlertaNoEnviada , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.activity, R.string.mensajeNoSalio , Toast.LENGTH_SHORT).show();
         }
     }
 }

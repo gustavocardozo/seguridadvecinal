@@ -14,7 +14,7 @@
     <string name="imageAncho">30</string>
 
 
-    <string name="mensajeAlertaNoEnviada">Por favor, verifique su conexión a internet</string>
+    <string name="mensajeNoSalio">Por favor verifique su conexión a internet</string>
 
     <string-array name="delitos_arrays">
         <item>Robos</item>
