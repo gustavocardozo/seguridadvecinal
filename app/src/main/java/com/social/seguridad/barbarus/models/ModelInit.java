@@ -11,8 +11,6 @@ public class ModelInit {
 
     private List<Provincia> provincias = new ArrayList<>();
 
-
-
     public ModelInit() {
 
         Provincia provinciaBuenosAires = new Provincia("Buenos Aires");
@@ -20,10 +18,11 @@ public class ModelInit {
         Provincia provinciaEntreRios = new Provincia("Entre Rios");
 
         /*Localidades*/
+        addLocalidad(provinciaBuenosAires, "Capital Federal", true ,"Agronomia","Almagro","Balvanera","Barracas","Belgrano","Boedo","Chacarita","Colegiales","Constitucion","Caballito","Microcentro","Monserrat","Nunez","Nueva Pompeya","Palermo","Parque Chacabuco","Puerto Madero","Flores","Floresta","Recoleta","Retiro","San Cristobal","San Nicolas","San Telmo","Villa Deboto","Villa Crespo");
         addLocalidad(provinciaBuenosAires, "Jose C Paz" , false , "Alberdi","El Salvador","Maximo" ,"Parque Alvear","Primavera" ,"Santa Rita", "San Luis","Trujui");
         addLocalidad(provinciaBuenosAires ,"San miguel" , false , "Mitre" ,"Otro");
         addLocalidad(provinciaBuenosAires, "Tortuguitas", false ,"Parque Alvear II","Tortuguitas");
-        addLocalidad(provinciaBuenosAires, "Capital Federal", true ,"Agronomia","Almagro","Balvanera","Barracas","Belgrano","Boedo","Chacarita","Colegiales","Constitucion","Caballito","Microcentro","Monserrat","Nunez","Nueva Pompeya","Palermo","Parque Chacabuco","Puerto Madero","Flores","Floresta","Recoleta","Retiro","San Cristobal","San Nicolas","San Telmo","Villa Deboto","Villa Crespo");
+
 
         addLocalidad(provinciaSantaFe ,"San Francisco" , false , "25 de Mayo");
         addLocalidad(provinciaEntreRios ,"Colón" , false , "Colón" );
