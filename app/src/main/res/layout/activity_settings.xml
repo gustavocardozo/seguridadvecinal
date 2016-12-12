@@ -86,7 +86,7 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/spinProvincias"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -97,7 +97,7 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/spinLocalidades"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -107,7 +107,7 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/spinBarrios"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
