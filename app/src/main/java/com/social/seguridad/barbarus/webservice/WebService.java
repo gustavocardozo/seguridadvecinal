@@ -76,7 +76,7 @@ public class WebService extends AsyncTask<String, Long, String> {
 			progDailog.setMessage("Cargando...");
 			progDailog.setIndeterminate(false);
 			progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progDailog.setCancelable(true);
+			progDailog.setCancelable(false);
 			progDailog.show();
 		}
     }

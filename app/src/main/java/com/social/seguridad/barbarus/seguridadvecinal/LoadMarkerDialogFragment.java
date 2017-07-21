@@ -29,7 +29,7 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
 
     //inputs
     @NotEmpty(message = "Complete la descripción" )
-    @Length(min = 30, message = "Debe contener como mínimo 30 caracteres")
+    @Length(min = 10, message = "Debe contener como mínimo 10 caracteres")
     EditText descripcion;
 
     //validador
@@ -120,6 +120,4 @@ public class LoadMarkerDialogFragment extends DialogFragment  implements  Valida
                 Toast.LENGTH_LONG).show();
         return false;
     }
-
-
 }

@@ -14,23 +14,21 @@ public class ModelInit {
     public ModelInit() {
 
         Provincia provinciaBuenosAires = new Provincia("Buenos Aires");
-        Provincia provinciaSantaFe = new Provincia("Santa Fe");
-        Provincia provinciaEntreRios = new Provincia("Entre Rios");
 
         /*Localidades*/
-        addLocalidad(provinciaBuenosAires, "Capital Federal", true ,"Agronomia","Almagro","Balvanera","Barracas","Belgrano","Boedo","Chacarita","Colegiales","Constitucion","Caballito","Microcentro","Monserrat","Nunez","Nueva Pompeya","Palermo","Parque Chacabuco","Puerto Madero","Flores","Floresta","Recoleta","Retiro","San Cristobal","San Nicolas","San Telmo","Villa Deboto","Villa Crespo");
-        addLocalidad(provinciaBuenosAires, "Jose C Paz" , false , "Alberdi","El Salvador","Maximo" ,"Parque Alvear","Primavera" ,"Santa Rita", "San Luis","Trujui");
-        addLocalidad(provinciaBuenosAires ,"San miguel" , false , "Mitre" ,"Otro");
-        addLocalidad(provinciaBuenosAires, "Tortuguitas", false ,"Parque Alvear II","Tortuguitas");
+        addLocalidad(provinciaBuenosAires, "Jose C Paz" , false ,
+        "El Salvador", "Monte Criollo", "Parque Pero", "Parque Golf Club", "Yei Porá", "Parque Alvear IV",
+        "Parque Alvear III", "Sol y Verde","Rincón de Tortuguitas","20 de Junio","Sagrada Familia",
+        "Urquiza", "San Atilio","Vucetich","Las Casitas", "Rooswel","Frino", "Lido","Zunino","Alberdi",
+        "Provincias Unidas","Frino sur","Villa Hermosa","Piñero","San Adolfo","25 de Mayo","Los Prados",
+        "Primavera","San Luis","San Ignacio","Arricau","El Ceibo","El Triángulo","La Paz","Gral. San Martín",
+        "Argital","Aquinaga","Centenario","Alberdi Oeste","Santa Rita","Santa Paula","Villa Iglesias",
+        "El Ombú","La Diagonal","El Cruce","Arquitectura","9 de Julio","Villa Germano","La Pilarica",
+        "Antartida Argentina","Infico","Ideal","Villa altube", "Mariano Moreno", "Altos de José C. Paz",
+        "Las Acacias","Parque Jardín San Miguel","San Gabriel","Parque Abascal","Las Heras",
+        "Sarmiento Norte","Sarmiento","Mirador de Altube");
 
-
-        addLocalidad(provinciaSantaFe ,"San Francisco" , false , "25 de Mayo");
-        addLocalidad(provinciaEntreRios ,"Colón" , false , "Colón" );
-
-        provincias.add(provinciaBuenosAires);
-        provincias.add(provinciaSantaFe);
-        provincias.add(provinciaEntreRios);
-
+                provincias.add(provinciaBuenosAires);
     }
 
 
@@ -107,5 +105,4 @@ public class ModelInit {
         Comuna comuna = new Comuna(name);
         localidad.getComunas().add(comuna);
     }
-
 }
