@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBarComunidad"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottombar_comunidad_tabs" />
+
+
+
+
+    </RelativeLayout >

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_comunidad"
+        icon="@drawable/ic_group_black_24dp"
+        title="Comunidad" />
+
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/ic_home_black_24dp"
+        title="Inicio" />
+
+</tabs>

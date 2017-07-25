@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivityForResult(intent, 0);
         }else if(tabId == R.id.tab_comunidad){
+            Intent intent = new Intent(MainActivity.this, ComunidadActivity.class);
+            startActivityForResult(intent, 0);
         }else if(tabId == R.id.tab_salir){
             salir();
         }

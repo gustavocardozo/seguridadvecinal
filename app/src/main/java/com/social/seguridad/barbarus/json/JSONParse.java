@@ -85,4 +85,26 @@ public class JSONParse {
         return resultJSONMarkers;
     }
 
+
+    public static List<String>  ParseJSONComunidad(String json) {
+        ResultJSONConfiguracion resultJSON = null;
+        List<String> resultado = new ArrayList<>();
+        if (json != null) {
+            try {
+                JSONArray jsonarray = new JSONArray(json);
+                for(int i=0; i < jsonarray.length(); i++) {
+                    JSONObject jsonobject = jsonarray.getJSONObject(i);
+                    resultado.add(jsonobject.getString("nombrecompleto"));
+                }
+            } catch (JSONException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+        return resultado;
+    }
+
+
 }
